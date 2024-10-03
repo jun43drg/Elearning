@@ -37,7 +37,7 @@ export const dashboardData: dashboardData[] = [
   //   date: 'Sun, Dec 23',
   // },
   {
-    id: 3,
+    id: 1,
     time: '2 mins Read',
     imgSrc: '/assets/images/dashboar/1.png',
     user: '/assets/images/profile/user-3.jpg',
@@ -49,7 +49,7 @@ export const dashboardData: dashboardData[] = [
     date: 'Sat, Dec 23',
   },
   {
-    id: 4,
+    id: 2,
     time: '2 mins Read',
     imgSrc: '/assets/images/dashboar/2.png',
     user: '/assets/images/profile/user-4.jpg',
@@ -62,7 +62,7 @@ export const dashboardData: dashboardData[] = [
     date: 'Sat, Dec 23',
   },
   {
-    id: 5,
+    id: 3,
     time: '2 mins Read',
     imgSrc: '/assets/images/dashboar/3.png',
     user: '/assets/images/profile/user-1.jpg',
