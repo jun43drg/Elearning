@@ -43,7 +43,7 @@ export const dashboardData: dashboardData[] = [
     user: '/assets/images/profile/user-3.jpg',
     title: 'Introduction to Structured Data',
     views: '9,125',
-    category: 'BUS500',
+    category: 'BUS5009999',
     comments: 12,
     featuredPost: false,
     date: 'Sat, Dec 23',
