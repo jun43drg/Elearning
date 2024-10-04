@@ -2,7 +2,7 @@
   "name": "modernize",
   "version": "2.0.0",
   "scripts": {
-    "init": "ng g c pages/dashboard/components/details",
+    "init": "ng g c pages/dashboard/components/course-detail",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

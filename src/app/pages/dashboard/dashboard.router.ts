@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DetailsComponent } from './components/details/details.component';
+import { CourseDetailComponent } from './components/course-detail/course-detail.component';
 
 
 // cas
@@ -30,9 +31,20 @@ export const DashboardRoutes: Routes = [
           ],
         },
       },
+      // {
+      //   path: ':id',
+      //   component: DetailsComponent,
+      //   data: {
+      //     title: 'Course Detail',
+      //     urls: [
+      //       { title: 'Dashboard', url: '/dashboards/dashboard1' },
+      //       { title: 'Course Detail' },
+      //     ],
+      //   },
+      // },
       {
         path: ':id',
-        component: DetailsComponent,
+        component: CourseDetailComponent,
         data: {
           title: 'Course Detail',
           urls: [
