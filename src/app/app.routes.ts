@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
-import { DetailsComponent } from './pages/dashboard/components/details/details.component';
+// import { DetailsComponent } from './pages/dashboard/components/coures-content-details/coures-content-details.component';
 
 export const routes: Routes = [
   {

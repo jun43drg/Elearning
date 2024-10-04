@@ -1,3 +1,27 @@
+<mat-card class="cardWithShadow">
+  <mat-card-content class="p-24">
+    <div class="row justify-content-between">
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline" class="w-100 hide-hint">
+          <input
+            matInput
+            placeholder="Search Course"
+            (keyup)="applyFilter($any($event.target).value)"
+          />
+          <mat-icon matSuffix style="cursor: pointer ; margin-right: 10px">
+            <i-tabler name="search" class="icon-20"></i-tabler>
+          </mat-icon>
+        </mat-form-field>
+      </div>
+      <div class="col-lg-4 d-flex align-items-center justify-content-end">
+        <button mat-flat-button (click)="openDialog('Add', {})" color="primary">
+          Thêm Khoá Học
+        </button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
 <div class="row">
     @for(blogPost of dashboardService.blogPosts; track blogPost.user) {
     @if(blogPost.featuredPost) {
@@ -75,6 +99,8 @@
             blogPost.time
           }}</mat-chip>
         </div>
+
+        
   
         <mat-card-content class="p-y-24">
           <!-- <div class="user-category">

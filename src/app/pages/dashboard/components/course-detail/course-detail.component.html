@@ -10,21 +10,10 @@
             </mat-icon>
           </mat-form-field>
         </div>
-        <div class="col-lg-3">
-          <mat-form-field appearance="outline" class="w-100 hide-hint">
-            <mat-label>Category</mat-label>
-            <mat-select
-              required
-              [value]="selectedCategory"
-              (selectionChange)="ddlChange($event)"
-            >
-              <mat-option value="All" selected>All</mat-option>
-              <mat-option value="Web">Web</mat-option>
-              <mat-option value="Android">Android</mat-option>
-              <mat-option value="Angular">Angular</mat-option>
-              <mat-option value="Design">Design</mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="col-lg-4 d-flex align-items-center justify-content-end">
+          <button mat-flat-button (click)="openDialog('Add', {})" color="primary">
+            Thêm Chương Học
+          </button>
         </div>
       </div>
     </mat-card-content>
@@ -58,7 +47,7 @@
           <!-- <button mat-button>Start</button> -->
           <a
             mat-button
-            [routerLink]="['/apps/courses/coursesdetail/', course.Id]"
+            [routerLink]="['/dashboard/course-content-detail', course.Id]"
             class="w-100"
           >
             START
