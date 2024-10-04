@@ -15,27 +15,45 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import {MatChipsModule} from '@angular/material/chips';
+
+
 
 @Component({
-  selector: 'app-details',
+  selector: 'coures-content-details',
   standalone: true,
   imports: [
-    MatCardModule, TablerIconsModule, MatStepperModule, MatInputModule, MatButtonModule
+    MatCardModule, TablerIconsModule, MatStepperModule, MatInputModule, MatButtonModule, MatDividerModule, MatChipsModule
   ],
-  templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+  templateUrl: './coures-content-details.component.html',
+  styleUrl: './coures-content-details.component.scss'
 })
-export class DetailsComponent {
+export class CourseContentDetailsComponent {
   id: any;
   courseDetail: any;
+  istoggleReply: any;
+  blogDetail: any = [
+    {
+      id: 1,
+      time: '2 mins Read',
+      imgSrc: '/assets/images/dashboar/1.png',
+      user: '/assets/images/profile/user-3.jpg',
+      title: 'Introduction to Structured Data',
+      views: '9,125',
+      category: 'BUS500',
+      comments: 12,
+      featuredPost: false,
+      date: 'Sat, Dec 23',
+    }
+  ];
   constructor(activatedRouter: ActivatedRoute, public dashboardService: dashboardService) {
     
-    // this.id = activatedRouter?.snapshot?.paramMap?.get('id');
-    // this.courseDetail = dashboardService
-    //   .getBlog()
+    this.id = activatedRouter?.snapshot?.paramMap?.get('id');
+    // this.blogDetail = dashboardService
+    //   .getCourse()
     //   .filter((x) => x?.Id === +this.id)[0];
   }
 
-  
+  toggleReply(){}
 
 }

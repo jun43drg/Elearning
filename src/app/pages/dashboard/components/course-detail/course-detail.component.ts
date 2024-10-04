@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject, Optional } from '@angular/core';
 
 
 // import { Component } from '@angular/core';
@@ -10,12 +10,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { dashboardService } from '../../dashboard.service';
+import { MaterialModule } from 'src/app/material.module';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-course-detail',
@@ -41,7 +43,7 @@ export class CourseDetailComponent {
   courseList: any[] = [];
   selectedCategory = 'All';
 
-  constructor(private courseService: dashboardService) {
+  constructor(private courseService: dashboardService,  public dialog: MatDialog,) {
     this.courseList = this.courseService.getCourse();
   }
 
@@ -69,4 +71,93 @@ export class CourseDetailComponent {
         .filter((course) => course.courseFramework === filterValue);
     }
   }
+
+  openDialog(action: string, obj: any): void {
+    obj.action = action;
+    const dialogRef = this.dialog.open(AppDialogCourseDetailComponent, {
+      data: obj,
+     
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      // if (result.event === 'Add') {
+      //   this.addRowData(result.data);
+      // } else if (result.event === 'Update') {
+      //   this.updateRowData(result.data);
+      // } else if (result.event === 'Delete') {
+      //   this.deleteRowData(result.data);
+      // }
+    });
+  }
 }
+
+
+
+
+
+
+@Component({
+  // tslint:disable-next-line: component-selector
+  selector: 'add-dialog-course-detail',
+  standalone: true,
+  imports: [MaterialModule, FormsModule, ReactiveFormsModule],
+  templateUrl: 'add-dialog-course-detail.html',
+  providers: [DatePipe],
+})
+// tslint:disable-next-line: component-class-suffix
+export class AppDialogCourseDetailComponent {
+  action: string;
+  // tslint:disable-next-line - Disables all
+  local_data: any;
+  selectedImage: any = '';
+  joiningDate: any = '';
+
+  constructor(
+    public datePipe: DatePipe,
+    public dialogRef: MatDialogRef<AppDialogCourseDetailComponent>,
+    // @Optional() is used to prevent error if no data is passed
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.local_data = { ...data };
+    this.action = this.local_data.action;
+    if (this.local_data.DateOfJoining !== undefined) {
+      this.joiningDate = this.datePipe.transform(
+        new Date(this.local_data.DateOfJoining),
+        'yyyy-MM-dd'
+      );
+    }
+    if (this.local_data.imagePath === undefined) {
+      this.local_data.imagePath = '';
+    }
+  }
+
+  doAction(): void {
+    this.dialogRef.close({ event: this.action, data: this.local_data });
+  }
+  closeDialog(): void {
+    this.dialogRef.close({ event: 'Cancel' });
+  }
+
+  selectFile(event: any): void {
+    if (!event.target.files[0] || event.target.files[0].length === 0) {
+      // this.msg = 'You must select an image';
+      return;
+    }
+    const mimeType = event.target.files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      // this.msg = "Only images are supported";
+      return;
+    }
+    // tslint:disable-next-line - Disables all
+    const reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    // tslint:disable-next-line - Disables all
+    reader.onload = (_event) => {
+      // tslint:disable-next-line - Disables all
+      this.local_data.imagePath = reader.result;
+    };
+  }
+}
+
+
+
+
