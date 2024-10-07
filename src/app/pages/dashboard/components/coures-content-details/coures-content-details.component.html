@@ -41,9 +41,180 @@
           Thu, Mar 30
         </span>
       </div>
+
+      @if(!isEdit){
+        <div class="d-block m-t-16 ">
+          <button mat-flat-button (click)="isEdit = !isEdit"  color="primary">
+            Edit
+          </button>
+        </div>
+      }
+      @if(isEdit){
+        <div class="d-block m-t-16 ">
+          <button mat-flat-button (click)="isEdit = !isEdit"  color="warn">
+            Remove Edit
+          </button>
+        </div>
+      }
+      
+      
     </mat-card-content>
     <mat-card-content class="p-24">
-      <h2 class="mat-headline-5 f-w-600 f-s-30">Title of the paragraph</h2>
+      @for(item of dataContentList; track dataContentList.id; let idx = $index){
+        @if(item.type == "title"){
+          @if(!isEdit ){
+            <h3 class="f-w-{{item.bold ? '700' : '100'}}" >{{item.value}}</h3>
+          }
+          @if(isEdit ){
+            <div class="row m-t-16">
+              <div class="col-lg-8">
+                <mat-form-field appearance="outline" class="w-100" color="primary" style="margin-bottom: -1.25em">
+                  <textarea matInput [value]="item.value" rows="3" ></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-2">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-select [value]="item.type">
+                    <mat-option value="title">Title</mat-option>
+                    <mat-option value="description">Description</mat-option>
+                    <mat-option value="child">Child</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-2">
+                <div style="display: flex; flex-direction: column; justify-content: space-between; gap:6px">
+                  <button mat-flat-button (click)="isEdit = !isEdit"  color="primary">
+                    Save
+                  </button>
+                  <button mat-flat-button (click)="isEdit = !isEdit"  color="warn">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        }
+        @if(item.type == "description"){
+          @if(!isEdit ){
+            <p class="f-w-{{item.bold ? '700' : '100'}}">
+              {{item.value}}
+            </p>
+          }
+          @if(isEdit ){
+            <div class="row m-t-16">
+              <div class="col-lg-8">
+                <mat-form-field appearance="outline" class="w-100" color="primary" style="margin-bottom: -1.25em">
+                  <textarea matInput [value]="item.value" rows="3" ></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-2">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-select [value]="item.type">
+                    <mat-option value="title">Title</mat-option>
+                    <mat-option value="description">Description</mat-option>
+                    <mat-option value="child">Child</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-2">
+                <div style="display: flex; flex-direction: column; justify-content: space-between; gap:6px">
+                  <button mat-flat-button (click)="isEdit = !isEdit"  color="primary">
+                    Save
+                  </button>
+                  <button mat-flat-button (click)="isEdit = !isEdit"  color="warn">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+          
+          
+        }
+        @if(item.type == "child"){
+          @if(!isEdit ){
+            <li class="f-w-{{item.bold ? '700' : '100'}}">{{item.value}}</li>
+          }
+          @if(isEdit ){
+            <div class="row m-t-16">
+              <div class="col-lg-8">
+                <mat-form-field appearance="outline" class="w-100" color="primary" style="margin-bottom: -1.25em">
+                  <textarea matInput [value]="item.value" rows="3" ></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-2">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-select [value]="item.type">
+                    <mat-option value="title">Title</mat-option>
+                    <mat-option value="description">Description</mat-option>
+                    <mat-option value="child">Child</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-lg-2">
+                <div style="display: flex; flex-direction: column; justify-content: space-between; gap:6px">
+                  <button mat-flat-button (click)="isEdit = !isEdit"  color="primary">
+                    Save
+                  </button>
+                  <button mat-flat-button (click)="isEdit = !isEdit"  color="warn">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+          }
+        }
+        
+      }
+
+      @if(isAdd){
+        <div class="row m-t-16">
+          <div class="col-lg-8">
+            <mat-form-field appearance="outline" class="w-100" color="primary" style="margin-bottom: -1.25em">
+              <textarea matInput [value]="" rows="3" ></textarea>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-2">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-select value="">
+                <mat-option value="title">Title</mat-option>
+                <mat-option value="description">Description</mat-option>
+                <mat-option value="child">Child</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-lg-2">
+            <div style="display: flex; flex-direction: column; justify-content: space-between; gap:6px">
+              <button mat-flat-button (click)="isEdit = !isEdit"  color="primary">
+                Save
+              </button>
+              <button mat-flat-button (click)="isEdit = !isEdit"  color="warn">
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if(isEdit){  
+          <button mat-flat-button class="m-t-16 m-r-6" color="primary" (click)="isAdd = !isAdd" >
+            {{isAdd ? 'Save' : 'Add'}}
+          </button>              
+      }
+
+      @if(isAdd){
+        <button mat-flat-button class="m-t-16" color="warn" (click)="isAdd = !isAdd" >
+          remove
+        </button>
+      }
+      
+      
+
+      
+      
+     
+      <!-- <h2 class="mat-headline-5 f-w-600 f-s-30">Title of the paragraph</h2>
       <p class="mat-body-1 m-t-16">
         But you cannot figure out what it is or what it can do. MTA web directory
         is the simplest way in which one can bid on a link, or a few links if they
@@ -97,7 +268,7 @@
           <i-tabler name="quote" class="icon-24"></i-tabler> Life is short, Smile
           while you still have teeth!
         </h6>
-      </div>
+      </div> -->
     </mat-card-content>
   </mat-card>
   }
