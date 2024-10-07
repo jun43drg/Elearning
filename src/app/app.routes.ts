@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
+import { AuthGuard } from './auth.guard';
 // import { DetailsComponent } from './pages/dashboard/components/coures-content-details/coures-content-details.component';
 
 export const routes: Routes = [
   {
     path: '',
+    canActivate: [AuthGuard],
     component: FullComponent,
     children: [
       {

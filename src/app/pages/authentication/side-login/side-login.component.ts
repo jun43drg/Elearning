@@ -16,7 +16,7 @@ export class AppSideLoginComponent {
   constructor(private settings: CoreService, private router: Router) { }
 
   form = new FormGroup({
-    uname: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    uname: new FormControl('', [Validators.required, Validators.minLength(5)]),
     password: new FormControl('', [Validators.required]),
   });
 
@@ -25,7 +25,15 @@ export class AppSideLoginComponent {
   }
 
   submit() {
+    localStorage.clear();
     // console.log(this.form.value);
-    this.router.navigate(['/dashboard']);
+    if(this.form.value.uname === 'admin' && this.form.value.password == '123') {
+      localStorage.setItem('tokens', '1');
+      this.router.navigate(['/dashboard']);
+    }else{
+      alert('Sai thông tin đăng nhập');
+      this.router.navigate(['/dashboard']);
+    }
+    
   }
 }
