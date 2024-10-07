@@ -17,6 +17,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import {MatChipsModule} from '@angular/material/chips';
 import { courseContentList } from '../../coures-content-details-data';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 
@@ -34,6 +35,7 @@ export class CourseContentDetailsComponent {
   id: any;
   courseDetail: any;
   istoggleReply: any;
+  local_data: any;
   blogDetail: any = [
     {
       id: 1,
@@ -51,7 +53,7 @@ export class CourseContentDetailsComponent {
   isEdit: boolean = false;
   isAdd: boolean = false;
   dataContentList: any = courseContentList
-  constructor(activatedRouter: ActivatedRoute, public dashboardService: dashboardService) {
+  constructor(activatedRouter: ActivatedRoute, public dashboardService: dashboardService, private sanitizer: DomSanitizer) {
     
     this.id = activatedRouter?.snapshot?.paramMap?.get('id');
     console.log('this.dataContentList',this.dataContentList);
@@ -61,5 +63,31 @@ export class CourseContentDetailsComponent {
   }
 
   toggleReply(){}
+
+  selectFile(event: any,idx:any): void {
+    console.log('idx',idx);
+    if (!event.target.files[0] || event.target.files[0].length === 0) {
+      // this.msg = 'You must select an image';
+      return;
+    }
+    const mimeType = event.target.files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+      // this.msg = "Only images are supported";
+      return;
+    }
+    // tslint:disable-next-line - Disables all
+    const reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    // tslint:disable-next-line - Disables all
+    reader.onload = (_event) => {
+      // tslint:disable-next-line - Disables all
+      this.dataContentList[idx].value = reader.result;
+      // this.dataContentList[idx].value = reader.result
+    };
+  }
+
+  safeUrl(res:any) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(res);
+  }
 
 }

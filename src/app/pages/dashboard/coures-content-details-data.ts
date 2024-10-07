@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 
 export const courseContentList: any[] = [
     {
@@ -419,5 +420,29 @@ export const courseContentList: any[] = [
       "value": "Để giải đáp các bài toán kinh doanh dựa trên dữ liệu, các nhà phân tích dữ liệu cần trang bị cho bản thân lượng kiến thức về chuyên môn và quá trình thực hiện phân tích data với 4 giai đoạn chính:",
       "bold": false,
       "type": "description"
+    },
+    {
+      "id": 71,
+      "value": "/assets/images/dashboar/table-chuong1.png",
+      "bold": false,
+      "type": "image"
+    },
+    {
+      "id": 72,
+      "value": "QUIZ|LEARNING DATA ANALYTICS",
+      "bold": true,
+      "type": "title"
+    },
+    {
+      "id": 72,
+      "value": "LEARNING DATA ANALYTICS",
+      "bold": false,
+      "type": "title"
+    },
+    {
+      "id": 73,
+      "value": 'https://www.youtube.com/embed/2fanjSYVElY',
+      "bold": false,
+      "type": "video"
     },
   ]

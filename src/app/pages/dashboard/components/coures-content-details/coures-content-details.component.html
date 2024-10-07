@@ -60,7 +60,95 @@
       
     </mat-card-content>
     <mat-card-content class="p-24">
+      
       @for(item of dataContentList; track dataContentList.id; let idx = $index){
+
+        @if(item.type == "video"){
+          @if(!isEdit ){
+            <div class="text-center">
+              <iframe width="600" height="400" [src]="safeUrl(item.value)" frameborder="0" allowfullscreen></iframe>
+            </div>
+          }
+          @if(isEdit ){
+          <div class="row m-t-16">
+            <div class="col-lg-8">
+              <mat-form-field appearance="outline" class="w-100" color="primary" style="margin-bottom: -1.25em">
+                <textarea matInput [value]="item.value" rows="3" ></textarea>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-2">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-select [value]="item.type">
+                  <mat-option value="title">Title</mat-option>
+                  <mat-option value="description">Description</mat-option>
+                  <mat-option value="child">Child</mat-option>
+                  <mat-option value="image">Image</mat-option>
+                  <mat-option value="video">Video</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-2">
+              <div style="display: flex; flex-direction: column; justify-content: space-between; gap:6px">
+                <button mat-flat-button (click)="isEdit = !isEdit"  color="primary">
+                  Save
+                </button>
+                <button mat-flat-button (click)="isEdit = !isEdit"  color="warn">
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+          }
+        }
+        
+        @if(item.type == "image"){
+          @if(!isEdit ){
+            <div class="text-center">
+              <img
+            mat-card-image
+            [src]="item.value"
+            alt="Photo of a Shiba Inu"
+            height="400"      
+          />
+            </div>
+          }
+          @if(isEdit ){
+          <div class="row m-t-16">
+            <div class="col-lg-8">
+              <img
+                class="mat-card-avatar"
+                [src]="item.value"
+                height="440" 
+                width="600"
+          />
+          <button mat-flat-button color="primary" class="m-l-16 input-file-button">
+            <input type="file" (change)="selectFile($event,idx)" #fileInput />
+          </button>
+            </div>
+            <div class="col-lg-2">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-select [value]="item.type">
+                  <mat-option value="title">Title</mat-option>
+                  <mat-option value="description">Description</mat-option>
+                  <mat-option value="child">Child</mat-option>
+                  <mat-option value="image">Image</mat-option>
+                  <mat-option value="video">Video</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-2">
+              <div style="display: flex; flex-direction: column; justify-content: space-between; gap:6px">
+                <button mat-flat-button (click)="isEdit = !isEdit"  color="primary">
+                  Save
+                </button>
+                <button mat-flat-button (click)="isEdit = !isEdit"  color="warn">
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+          }
+        }
         @if(item.type == "title"){
           @if(!isEdit ){
             <h3 class="f-w-{{item.bold ? '700' : '100'}}" >{{item.value}}</h3>
@@ -78,6 +166,8 @@
                     <mat-option value="title">Title</mat-option>
                     <mat-option value="description">Description</mat-option>
                     <mat-option value="child">Child</mat-option>
+                    <mat-option value="image">Image</mat-option>
+                    <mat-option value="video">Video</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -113,6 +203,8 @@
                     <mat-option value="title">Title</mat-option>
                     <mat-option value="description">Description</mat-option>
                     <mat-option value="child">Child</mat-option>
+                    <mat-option value="image">Image</mat-option>
+                    <mat-option value="video">Video</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -148,6 +240,8 @@
                     <mat-option value="title">Title</mat-option>
                     <mat-option value="description">Description</mat-option>
                     <mat-option value="child">Child</mat-option>
+                    <mat-option value="image">Image</mat-option>
+                    <mat-option value="video">Video</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -181,6 +275,8 @@
                 <mat-option value="title">Title</mat-option>
                 <mat-option value="description">Description</mat-option>
                 <mat-option value="child">Child</mat-option>
+                <mat-option value="image">Image</mat-option>
+                <mat-option value="video">Video</mat-option>
               </mat-select>
             </mat-form-field>
           </div>

@@ -260,4 +260,8 @@ export class FullComponent implements OnInit {
       this.htmlElement.classList.add('light-theme');
     }
   }
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/authentication/login']);
+  }
 }
