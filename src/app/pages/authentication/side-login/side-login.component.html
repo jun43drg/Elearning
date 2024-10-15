@@ -1,3 +1,5 @@
+<!-- <button mat-stroked-button (click)="openSnackBar('hello','error')">Show snack-bar</button> -->
+
 <div class="blank-layout-container justify-content-center">
   <div class="position-relative row w-100 h-100">
     <div class="col-lg-7 col-xl-8 bg-gredient p-0">
@@ -76,6 +78,10 @@
 
             <div class="or-border m-t-30">or sign in with</div>
 
+            <div class="m-t-24 d-flex justify-content-center" *ngIf="loadingSpinner">
+              <mat-spinner ></mat-spinner>
+            </div>
+
             <form class="m-t-30" [formGroup]="form" (ngSubmit)="submit()">
               <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
                 >Username</mat-label
@@ -85,7 +91,7 @@
                 class="w-100"
                 color="primary"
               >
-                <input matInput formControlName="uname" placeholder="admin" />
+                <input matInput formControlName="uname" placeholder="HauA@gmail.com" />
                 @if(f['uname'].touched && f['uname'].invalid) {
                 <mat-hint class="m-b-16 error-msg">
                   @if(f['uname'].errors && f['uname'].errors['required']) {
@@ -106,7 +112,7 @@
                 class="w-100"
                 color="primary"
               >
-                <input matInput type="password" formControlName="password"  placeholder="123"/>
+                <input matInput type="password" formControlName="password"  placeholder="Parth123"/>
                 @if(f['password'].touched && f['password'].invalid) {
                 <mat-hint class="m-b-16 error-msg">
                   @if( f['password'].errors && f['password'].errors['required'])
