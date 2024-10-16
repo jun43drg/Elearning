@@ -1,4 +1,4 @@
-import { Component, Inject, Optional } from '@angular/core';
+import { Component, inject, Inject, Optional } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -16,6 +16,7 @@ import { CourseListModel } from '../../model/course-list.model';
 import { Observable, Subscription } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
+import { MAT_SNACK_BAR_DATA, MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dashboard',
@@ -51,6 +52,7 @@ export class DashboardComponent {
     activatedRouter: ActivatedRoute,
     public dashboardService: dashboardService,
     public dialog: MatDialog,
+    
     // public datePipe: DatePipe
   ) {
     
@@ -58,12 +60,15 @@ export class DashboardComponent {
 
   openDialogRemove(
     enterAnimationDuration: string,
-    exitAnimationDuration: string
+    exitAnimationDuration: string,
+    data: any
   ): void {
     this.dialog.open(AppDialogOverviewComponent, {
       width: '290px',
       enterAnimationDuration,
       exitAnimationDuration,
+      data
+      
     });
   }
 
@@ -80,8 +85,8 @@ export class DashboardComponent {
 
   converImage(imagePath: any) {
     
-    // const baseUrl = 'http://localhost:3000';
-    const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
+    const baseUrl = 'http://localhost:3000';
+    // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
   // Loại bỏ 'uploads' khỏi đường dẫn
   const cleanedImagePath = imagePath.replace('uploads/', ''); 
@@ -165,13 +170,15 @@ export class AppDialogCourseComponent {
   joiningDate: any = '';
   public imageCurrent: any;
   public loadingSpinner = false;
-
+  private _snackBar = inject(MatSnackBar)
   constructor(
     public datePipe: DatePipe,
     public dialogRef: MatDialogRef<AppDialogCourseComponent>,
     public dashboardService: dashboardService,
+    
     // @Optional() is used to prevent error if no data is passed
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: any
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+    
   ) {
     this.local_data = { ...data };
     this.action = this.local_data.action;
@@ -212,9 +219,18 @@ export class AppDialogCourseComponent {
             (res: any) => {
              if(res){
               this.loadingSpinner = false;
+              this.openSnackBar('Update successful', 'success');
               this.dialogRef.close({ event: this.action, data: this.local_data });
              }
-            }
+            },
+            (error: any) => {
+              // Case error: handle the error here
+              
+              this.loadingSpinner = false;  // Stop spinner if error happens
+              console.error('Error fetching courses:', error);
+              // Optionally show an error message to the user
+              this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+            }  
           );          
         }        
       }
@@ -248,14 +264,34 @@ export class AppDialogCourseComponent {
               (res: any) => {
                if(res){
                 this.loadingSpinner = false;
+                this.openSnackBar('Update successful', 'success');
                 this.dialogRef.close({ event: this.action, data: this.local_data });
                }
-              }
-            );          
-          }        
+              },
+              (error: any) => {
+                // Case error: handle the error here
+                
+                this.loadingSpinner = false;  // Stop spinner if error happens
+                console.error('Error fetching courses:', error);
+                // Optionally show an error message to the user
+                this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+              }   
+            )
+                   
+          }
+              
         }
       );
     
+  }
+
+  durationInSeconds = 3;
+  openSnackBar(data:any, status: string) {
+
+    this._snackBar.openFromComponent(SnackbarComponent, {
+      duration: this.durationInSeconds * 1000,
+      data: { message: data, status: status  }, // Truyền dữ liệu
+    }); 
   }
   closeDialog(): void {
     this.dialogRef.close({ event: 'Cancel' });
@@ -308,10 +344,89 @@ export class AppDialogCourseComponent {
 @Component({
   selector: 'dialog-overview',
   standalone: true,
-  imports: [MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatButtonModule],
+  imports: [MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatButtonModule,MatProgressSpinnerModule, MatIconModule, CommonModule],
   templateUrl: 'dialog-overview.component.html',
 })
 export class AppDialogOverviewComponent {
-  constructor(public dialogRef: MatDialogRef<AppDialogOverviewComponent>) {}
+  private _snackBar = inject(MatSnackBar)
+  constructor(
+   
+    public dialogRef: MatDialogRef<AppDialogOverviewComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dashboardService: dashboardService,
+    
+  
+  ) {
+
+  }
+  public loadingSpinner: boolean = false;
+
+  save(): void {
+    this.loadingSpinner = true
+    console.log('save',this.data)
+    const body = {
+      id: this.data.id,
+    }
+    this.dashboardService.deleteCourse(body).subscribe(
+      (res: any) => {        
+        if (res) {
+          this.dashboardService.getAllCourse().subscribe(
+            (res: any) => {
+             if(res){
+              this.loadingSpinner = false;
+              this.dialogRef.close();
+             }
+            }
+          );          
+        }        
+      },
+      (error: any) => {
+        // Case error: handle the error here
+        this.loadingSpinner = false;  // Stop spinner if error happens
+        console.error('Error fetching courses:', error);
+        console.log('error.statusText', error.statusText)
+        // Optionally show an error message to the user
+        this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+      }    
+      
+    )
+  }
+
+  durationInSeconds = 3;
+
+  openSnackBar(data:any, status: string) {
+
+    this._snackBar.openFromComponent(SnackbarComponent, {
+      duration: this.durationInSeconds * 1000,
+      data: { message: data, status: status  }, // Truyền dữ liệu
+    }); 
+  }
+
+  cancle(): void {
+    console.log('cancle')
+  }
+}
+
+
+
+
+@Component({
+  selector: 'sussess-snackbar',
+  template: `
+   <span [class]="data.status">{{ data.message }}</span>
+
+  `,
+  styles: `
+    .success {
+      color: #13deb9 !important;
+    }
+    .error {
+      color: red !important;
+    }
+  `,
+  standalone: true,
+})
+export class SnackbarComponent {
+  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) {}
 }
 

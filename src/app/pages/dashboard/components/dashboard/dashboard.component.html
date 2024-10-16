@@ -57,7 +57,7 @@
 
       <mat-card-content class="p-y-24">
 
-        <mat-card-title style="text-overflow: ellipsis; overflow: hidden;" class="mat-headline-6 m-t-15">{{
+        <mat-card-title style="text-overflow: ellipsis; overflow: hidden;height: 3rem;" class="mat-headline-6 m-t-15">{{
           blogPost.description
         }}</mat-card-title>
         <div class="d-flex align-items-center justify-content-center m-t-24">
@@ -87,7 +87,7 @@
             <mat-icon>settings</mat-icon>
             Save Edit
           </button>
-          <button mat-flat-button color="warn" (click)="openDialogRemove('0ms', '0ms')">
+          <button mat-flat-button color="warn" (click)="openDialogRemove('0ms', '0ms', blogPost)">
             <mat-icon>delete</mat-icon>
             Remove
           </button>

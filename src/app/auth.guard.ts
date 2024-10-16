@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
     // Giả sử bạn có một phương thức kiểm tra trạng thái xác thực
    
     const token = localStorage.getItem('tokens');
-    console.log('token', token)
+    
 
     if (token) {
       // Thực hiện thêm kiểm tra về token nếu cần, ví dụ: kiểm tra tính hợp lệ của token

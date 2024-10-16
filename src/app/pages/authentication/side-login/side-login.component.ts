@@ -90,15 +90,7 @@ export class AppSideLoginComponent {
     this._snackBar.openFromComponent(SnackbarComponent, {
       duration: this.durationInSeconds * 1000,
       data: { message: data, status: status  }, // Truyền dữ liệu
-    });
-    
-    // this._snackBar.openFromComponent(SuccessSnackbarComponent, {
-    //   duration: this.durationInSeconds * 1000,
-    // });
-
-    // this._snackBar.openFromComponent(ErrorSnackbarComponent, {
-    //   duration: this.durationInSeconds * 1000,
-    // });
+    }); 
   }
 
   // openSnackBar(message: string, action: string) {
