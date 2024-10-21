@@ -59,9 +59,11 @@ export class AppSideLoginComponent {
           
           localStorage.clear();
           localStorage.setItem('tokens', response.accessToken);
-          this.openSnackBar('Login successful', 'success');
-          this.loadingSpinner = false;
-          this.router.navigate(['/dashboard']);
+          
+          setTimeout(() => {
+            this.openSnackBar('Login successful', 'success');
+            this.router.navigate(['/dashboard']);
+          }, 2000);
         }
         
       },

@@ -40,7 +40,7 @@ export class DashboardComponent {
   istoggleReply = true;
   private subscription!: Subscription;
   protected sourceList$!: Observable<any | null>;
-  public loadingSpinner = true;
+  public loadingSpinner = false;
 
   toggleReply() {
     this.istoggleReply = !this.istoggleReply;
@@ -84,13 +84,22 @@ export class DashboardComponent {
   }
 
   converImage(imagePath: any) {
-    
+    console.log('imagePath',imagePath)
     // const baseUrl = 'http://localhost:3000';
+    let cleanedImagePath = null
     const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
-  // Loại bỏ 'uploads' khỏi đường dẫn
-  const cleanedImagePath = imagePath.replace('uploads/', ''); 
-  return `${baseUrl}/${cleanedImagePath}`;
+    // Loại bỏ 'uploads' khỏi đường dẫn
+  if(imagePath.includes('uploads')){
+   
+    const format = imagePath.replace('uploads/', ''); 
+    cleanedImagePath = `${baseUrl}/${format}`
+  }else{
+
+    cleanedImagePath = imagePath;
+  }
+ 
+  return cleanedImagePath
   }
 
   ngOnInit(): void {
@@ -143,15 +152,6 @@ export class DashboardComponent {
     });
   }
 }
-
-
-
-
-
-
-
-
-
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -244,11 +244,8 @@ export class AppDialogCourseComponent {
     const formData = new FormData();
     if (this.imageCurrent) {      
       formData.append('image', new File([this.imageCurrent], this.imageCurrent.name, { type: this.imageCurrent.type }));
-    } else {
-      
-      formData.append('image', this.local_data.image); 
-      
-      
+    } else {      
+      formData.append('image', this.local_data.image);       
     } 
     formData.append('id', this.local_data.id);
     formData.append('title', this.local_data.title);
@@ -298,6 +295,7 @@ export class AppDialogCourseComponent {
   }
 
   converImage(imagePath: any) {
+    console.log('imagePath',imagePath)
     // const baseUrl = 'http://localhost:3000';
     let cleanedImagePath = null
     const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
@@ -311,7 +309,7 @@ export class AppDialogCourseComponent {
 
     cleanedImagePath = imagePath;
   }
-  
+ 
   return cleanedImagePath
   }
 

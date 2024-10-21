@@ -1,4 +1,4 @@
-import { Component, Inject, Optional } from '@angular/core';
+import { Component, inject, Inject, Optional } from '@angular/core';
 
 
 // import { Component } from '@angular/core';
@@ -11,13 +11,17 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { CommonModule, DatePipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { dashboardService } from '../../dashboard.service';
 import { MaterialModule } from 'src/app/material.module';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { Observable, Subscription } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MAT_SNACK_BAR_DATA, MatSnackBar } from '@angular/material/snack-bar';
+import { A } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-course-detail',
@@ -34,6 +38,8 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
     MatIconModule,
     MatInputModule,
     MatButtonModule,
+    CommonModule,
+    MatProgressSpinnerModule, MatIconModule
   ],
   templateUrl: './course-detail.component.html',
   styleUrl: './course-detail.component.scss'
@@ -42,10 +48,56 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 export class CourseDetailComponent {
   courseList: any[] = [];
   selectedCategory = 'All';
+  course_id = this.route.snapshot.paramMap.get('id')!;
+  sourceDetailList$: Observable<any> | undefined;
+  private subscription!: Subscription;
+  public loadingSpinner = false;
 
-  constructor(private courseService: dashboardService,  public dialog: MatDialog,) {
+  constructor(
+    private courseService: dashboardService,  
+    public dialog: MatDialog,
+    private route: ActivatedRoute
+  ) {
     this.courseList = this.courseService.getCourse();
   }
+
+  ngOnInit(): void {
+    
+    this.loadingSpinner = true;
+    this.sourceDetailList$ = this.courseService.sourceDetailList$;
+    this.subscription = this.courseService.getAllCourseDetail(this.course_id).subscribe(
+      (res: any) => {
+        if(res){
+          this.loadingSpinner = false;
+        }
+      }
+    )
+    console.log('this.sourceDetailList$',this.sourceDetailList$)
+   
+  }
+
+  openDialogRemove(
+    enterAnimationDuration: string,
+    exitAnimationDuration: string,
+    data: any
+  ): void {
+    this.dialog.open(AppDialogOverviewComponent, {
+      width: '290px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data
+      
+    });
+  }
+
+  ngDestroy(): void {
+   
+    if (this.subscription) {
+      
+      this.subscription.unsubscribe();
+    }
+  }
+
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -73,7 +125,9 @@ export class CourseDetailComponent {
   }
 
   openDialog(action: string, obj: any): void {
+    
     obj.action = action;
+    obj.course_id = this.course_id;
     const dialogRef = this.dialog.open(AppDialogCourseDetailComponent, {
       data: obj,
      
@@ -99,7 +153,7 @@ export class CourseDetailComponent {
   // tslint:disable-next-line: component-selector
   selector: 'add-dialog-course-detail',
   standalone: true,
-  imports: [MaterialModule, FormsModule, ReactiveFormsModule],
+  imports: [MaterialModule, FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: 'add-dialog-course-detail.html',
   providers: [DatePipe],
 })
@@ -110,9 +164,13 @@ export class AppDialogCourseDetailComponent {
   local_data: any;
   selectedImage: any = '';
   joiningDate: any = '';
+  public imageCurrent: any;
+  public loadingSpinner = false;
+  private _snackBar = inject(MatSnackBar)
 
   constructor(
     public datePipe: DatePipe,
+    public dashboardService: dashboardService,
     public dialogRef: MatDialogRef<AppDialogCourseDetailComponent>,
     // @Optional() is used to prevent error if no data is passed
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
@@ -130,11 +188,116 @@ export class AppDialogCourseDetailComponent {
     }
   }
 
-  doAction(): void {
-    this.dialogRef.close({ event: this.action, data: this.local_data });
+  // doAction(): void {
+  //   console.log('this.local_data',this.local_data)
+  //   this.dialogRef.close({ event: this.action, data: this.local_data });
+  // }
+  saveCreate(): void {
+    
+    this.loadingSpinner = true
+   
+    const formData = new FormData();
+    if (this.imageCurrent) {      
+      formData.append('image', new File([this.imageCurrent], this.imageCurrent.name, { type: this.imageCurrent.type }));
+    } else {      
+      formData.append('image', ''); 
+    }    
+    formData.append('course_id', this.local_data.course_id);
+    formData.append('title', this.local_data.title);
+    formData.append('description', this.local_data.description);
+    formData.append('time_study', this.local_data.time_study);
+    this.dashboardService.createCourseDetail(formData).subscribe(
+      (res: any) => {        
+        if (res) {
+          this.dashboardService.getAllCourseDetail(this.local_data.course_id).subscribe(
+            (res: any) => {
+             if(res){
+              this.loadingSpinner = false;
+              this.openSnackBar('Update successful', 'success');
+              this.dialogRef.close({ event: this.action, data: this.local_data });
+             }
+            },
+            (error: any) => {                 
+              this.loadingSpinner = false; 
+              console.error('Error fetching courses:', error);             
+              this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+            }  
+          );          
+        }        
+      }
+    );
+    
   }
+
+  saveEdit(): void {
+    console.log('saveEdit')
+    this.loadingSpinner = true
+   
+    const formData = new FormData();
+    if (this.imageCurrent) {      
+      formData.append('image', new File([this.imageCurrent], this.imageCurrent.name, { type: this.imageCurrent.type }));
+    } else {      
+      formData.append('image', ''); 
+    }    
+    
+    formData.append('id', this.local_data.id);
+    formData.append('title', this.local_data.title);
+    formData.append('description', this.local_data.description);
+    formData.append('time_study', this.local_data.time_study);
+    this.dashboardService.updateCourseDetail(formData).subscribe(
+      (res: any) => {        
+        if (res) {
+          this.dashboardService.getAllCourseDetail(this.local_data.course_id).subscribe(
+            (res: any) => {
+             if(res){
+              this.loadingSpinner = false;
+              this.openSnackBar('Update successful', 'success');
+              this.dialogRef.close({ event: this.action, data: this.local_data });
+             }
+            },
+            (error: any) => {                 
+              this.loadingSpinner = false; 
+              console.error('Error fetching courses:', error);             
+              this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+            }  
+          );          
+        }        
+      }
+    );
+    
+  }
+
+  durationInSeconds = 3;
+  openSnackBar(data:any, status: string) {
+
+    this._snackBar.openFromComponent(SnackbarComponent, {
+      duration: this.durationInSeconds * 1000,
+      data: { message: data, status: status  }, // Truyền dữ liệu
+    }); 
+  }
+
+
   closeDialog(): void {
     this.dialogRef.close({ event: 'Cancel' });
+  }
+
+  converImage(imagePath: any) {
+    console.log('imagePath',imagePath)
+    // const baseUrl = 'http://localhost:3000';
+    let cleanedImagePath = null
+    const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
+    // URL cơ sở của bạn
+    // Loại bỏ 'uploads' khỏi đường dẫn
+  if(imagePath.includes('uploads')){
+   
+    const format = imagePath.replace('uploads/', ''); 
+    cleanedImagePath = `${baseUrl}/${format}`
+  }else{
+
+    cleanedImagePath = imagePath;
+  }
+ 
+  return cleanedImagePath
   }
 
   selectFile(event: any): void {
@@ -149,6 +312,7 @@ export class AppDialogCourseDetailComponent {
     }
     // tslint:disable-next-line - Disables all
     const reader = new FileReader();
+    this.imageCurrent = event.target.files[0];
     reader.readAsDataURL(event.target.files[0]);
     // tslint:disable-next-line - Disables all
     reader.onload = (_event) => {
@@ -156,6 +320,95 @@ export class AppDialogCourseDetailComponent {
       this.local_data.imagePath = reader.result;
     };
   }
+}
+
+@Component({
+  selector: 'dialog-overview',
+  standalone: true,
+  imports: [MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatButtonModule,MatProgressSpinnerModule, MatIconModule, CommonModule],
+  templateUrl: 'dialog-overview.component.html',
+})
+export class AppDialogOverviewComponent {
+  private _snackBar = inject(MatSnackBar)
+  constructor(
+   
+    public dialogRef: MatDialogRef<AppDialogOverviewComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dashboardService: dashboardService,
+    
+  
+  ) {
+
+  }
+  public loadingSpinner: boolean = false;
+
+  save(): void {
+    // this.loadingSpinner = true
+    // console.log('save',this.data)
+    // const body = {
+    //   id: this.data.id,
+    // }
+    // this.dashboardService.deleteCourse(body).subscribe(
+    //   (res: any) => {        
+    //     if (res) {
+    //       this.dashboardService.getAllCourse().subscribe(
+    //         (res: any) => {
+    //          if(res){
+    //           this.loadingSpinner = false;
+    //           this.dialogRef.close();
+    //          }
+    //         }
+    //       );          
+    //     }        
+    //   },
+    //   (error: any) => {
+    //     // Case error: handle the error here
+    //     this.loadingSpinner = false;  // Stop spinner if error happens
+    //     console.error('Error fetching courses:', error);
+    //     console.log('error.statusText', error.statusText)
+    //     // Optionally show an error message to the user
+    //     this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+    //   }    
+      
+    // )
+  }
+
+  durationInSeconds = 3;
+
+  openSnackBar(data:any, status: string) {
+
+    this._snackBar.openFromComponent(SnackbarComponent, {
+      duration: this.durationInSeconds * 1000,
+      data: { message: data, status: status  }, // Truyền dữ liệu
+    }); 
+  }
+
+  cancle(): void {
+    console.log('cancle')
+  }
+}
+
+
+
+
+@Component({
+  selector: 'sussess-snackbar',
+  template: `
+   <span [class]="data.status">{{ data.message }}</span>
+
+  `,
+  styles: `
+    .success {
+      color: #13deb9 !important;
+    }
+    .error {
+      color: red !important;
+    }
+  `,
+  standalone: true,
+})
+export class SnackbarComponent {
+  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) {}
 }
 
 

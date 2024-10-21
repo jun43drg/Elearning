@@ -4,7 +4,7 @@
 </div>
 
 @if(action !== 'Delete') {
-<mat-dialog-content style="max-width: 1400px">
+<mat-dialog-content style="min-width: 800px; ">
   <form #courseForm="ngForm">
     <!-- <div class="d-flex align-items-center m-b-16" >
       <img
@@ -20,54 +20,46 @@
     </div> -->
 
     <div class="row">
-      <div class="col-lg-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <input
-            type="text"
-            matInput
-            required
-            id="title"
-            name="name"
-            [(ngModel)]="local_data.title"
-            placeholder="title"
-          />
+      <div class="col-lg-12">
+        
+        <mat-form-field appearance="outline" class="w-100 m-t-8" color="primary">
+          <textarea matInput [(ngModel)]="local_data.value" name="value" placeholder="Value" rows="3"></textarea>
         </mat-form-field>
-      </div>
-      <div class="col-lg-6">
-        <mat-form-field appearance="outline" class="w-100">
-          <input
-            type="text"
-            matInput
-            required
-            id="description"
-            name="description"
-            [(ngModel)]="local_data.description"
-            placeholder="description"
-          />
-        </mat-form-field>
-      </div>
-      <div class="col-lg-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <input
-            type="text"
-            matInput
-            required
-            id="time_study"
-            name="time_study"
-            [(ngModel)]="local_data.time_study"
-            placeholder="Time study"
-          />
-        </mat-form-field>
-      </div>
-     
-
-     
+      </div>   
+      
     </div>
-    <button *ngIf="action == 'Add'"
+    <div class="row">
+      <div class="col-lg-6 ">
+        <label class="m-b-8">Type:</label>
+        <mat-form-field appearance="outline" class="w-100 m-t-8">          
+          <mat-select [(ngModel)]="local_data.type_id" name="type_id">
+            <mat-option [value]="1">Title</mat-option>
+            <mat-option [value]="2">Description</mat-option>
+            <mat-option [value]="3">Child</mat-option>
+            <mat-option [value]="4">Image</mat-option>
+            <mat-option [value]="5">Video</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <div class="col-lg-6 " >
+        <label class="m-b-8">Bold:</label>
+        <mat-form-field appearance="outline" class="w-100 m-t-8">
+          <mat-select [(ngModel)]="local_data.bold" name="bold">
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+   
+    <div class="d-flex justify-content-center">
+      <button *ngIf="action == 'Add'"
       mat-flat-button
       (click)="saveCreate()"
       mat-flat-button
       color="primary"
+      class="m-b-8"
       [disabled]="!courseForm.valid"
     >
       Add
@@ -78,18 +70,21 @@
     (click)="saveEdit()"
     mat-flat-button
     color="primary"
+    class="m-b-8"
     [disabled]="!courseForm.valid"
   >
-    Edit
+      Save
   </button>
     <button
       mat-stroked-button
       color="warn"
-      class="m-l-8"
+      class="m-l-8 m-b-8"
       (click)="closeDialog()"
     >
       Cancel
     </button>
+    </div>
+   
   </form>
 </mat-dialog-content>
 } @else {
