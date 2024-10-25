@@ -17,6 +17,9 @@ import { Observable, Subscription } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
 import { MAT_SNACK_BAR_DATA, MatSnackBar } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ApplyUserComponent } from '../apply-user/apply-user.component';
+// import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,13 +30,18 @@ import { MAT_SNACK_BAR_DATA, MatSnackBar } from '@angular/material/snack-bar';
     MatChipsModule,
     TablerIconsModule,
     MatDividerModule,
-    MatFormFieldModule, MatInputModule, MatButtonModule, MatProgressSpinnerModule, MatIconModule
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatButtonModule, 
+    MatProgressSpinnerModule, 
+    MatIconModule,
+    MatSlideToggleModule,
+    FormsModule,    
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
-
+export class DashboardComponent {  
   title: any;
   blogDetail: any = null;
 
@@ -70,11 +78,7 @@ export class DashboardComponent {
       data
       
     });
-  }
-
-  
-
-  
+  } 
 
   selectCourse(b: string) {
    
@@ -84,25 +88,24 @@ export class DashboardComponent {
   }
 
   converImage(imagePath: any) {
-    console.log('imagePath',imagePath)
+    // console.log('imagePath',imagePath)
     // const baseUrl = 'http://localhost:3000';
     let cleanedImagePath = null
     const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
     // Loại bỏ 'uploads' khỏi đường dẫn
-  if(imagePath.includes('uploads')){
-   
+  if(imagePath.includes('uploads')){   
     const format = imagePath.replace('uploads/', ''); 
     cleanedImagePath = `${baseUrl}/${format}`
   }else{
-
     cleanedImagePath = imagePath;
-  }
- 
+  } 
   return cleanedImagePath
   }
 
   ngOnInit(): void {
+    console.log('isButtonPermission', this.isButtonPermission());
+    
     this.loadingSpinner = true;
     if (this.dashboardService.blogPosts.length === 0) {
       this.dashboardService
@@ -121,25 +124,22 @@ export class DashboardComponent {
    
   }
 
-  applyFilter(filterValue: string): void {
-    
+  isButtonPermission(): boolean {
+    const role = JSON.parse(localStorage.getItem('role') || '[]');
+    return ['Admin', 'Teacher'].some(r => role.includes(r));
   }
+  applyFilter(filterValue: string): void {}
 
-  ngDestroy(): void {
-   
-    if (this.subscription) {
-      
+  ngOnDestroy(): void {   
+    if (this.subscription) {      
       this.subscription.unsubscribe();
     }
-  }
-
-  
+  } 
 
   openDialog(action: string, obj: any): void {
     obj.action = action;
     const dialogRef = this.dialog.open(AppDialogCourseComponent, {
-      data: obj,
-     
+      data: obj,     
     });
     dialogRef.afterClosed().subscribe((result) => {
       // if (result.event === 'Add') {
@@ -151,13 +151,26 @@ export class DashboardComponent {
       // }
     });
   }
+
+  openApllyDialog(obj: any): void {
+    this.dialog.open(ApplyUserComponent, {
+      data: obj,
+    });
+  }
 }
 
 @Component({
   // tslint:disable-next-line: component-selector
   selector: 'app-dialog-coures',
   standalone: true,
-  imports: [MaterialModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [
+    MaterialModule, 
+    FormsModule, 
+    ReactiveFormsModule, 
+    CommonModule, 
+    MatDividerModule, 
+    MatIconModule,
+    TablerIconsModule],
   templateUrl: 'add-dialog-course.html',
   providers: [DatePipe],
 })
@@ -193,24 +206,23 @@ export class AppDialogCourseComponent {
     }
   }
 
-  ngOnInit(): void {
-    
-  }
-  
-  
+  ngOnInit(): void {}  
+
   saveCreate(): void {
     this.loadingSpinner = true
     const formData = new FormData();
     if (this.imageCurrent) {      
       formData.append('image', new File([this.imageCurrent], this.imageCurrent.name, { type: this.imageCurrent.type }));
-    } else {
-      const emptyFile = new File([], 'empty.txt', { type: 'text/plain' });
-      formData.append('image', emptyFile); 
+    } else {      
+      formData.append('image', this.local_data.image); 
     }    
     formData.append('title', this.local_data.title);
     formData.append('description', this.local_data.description);
     formData.append('time_study', this.local_data.time_study);
     formData.append('status', this.local_data.status);
+    formData.append('price', this.local_data.price);
+    formData.append('old_price', this.local_data.old_price);
+    formData.append('star', this.local_data.star);
     // Log the contents of FormData
     this.dashboardService.createCourse(formData).subscribe(
       (res: any) => {        
@@ -225,21 +237,28 @@ export class AppDialogCourseComponent {
             },
             (error: any) => {
               // Case error: handle the error here
-              
+              this.openSnackBar(error.error.message, 'error');
               this.loadingSpinner = false;  // Stop spinner if error happens
-              console.error('Error fetching courses:', error);
+             
               // Optionally show an error message to the user
               this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
             }  
           );          
         }        
-      }
+      },
+      (error: any) => {
+        // Case error: handle the error here
+        this.openSnackBar(error.error.message, 'error');
+        this.loadingSpinner = false;  // Stop spinner if error happens
+        console.error('Error fetching courses:', error);     
+        // Optionally show an error message to the user
+        this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+      } 
     );
     
   }
 
-  saveEdit(): void {
-    
+  saveEdit(): void {    
     this.loadingSpinner = true
     const formData = new FormData();
     if (this.imageCurrent) {      
@@ -252,8 +271,9 @@ export class AppDialogCourseComponent {
     formData.append('description', this.local_data.description);
     formData.append('time_study', this.local_data.time_study);
     formData.append('status', this.local_data.status);
-
-   
+    formData.append('price', this.local_data.price);
+    formData.append('old_price', this.local_data.old_price);
+    formData.append('star', this.local_data.star);   
     this.dashboardService.updateCourse(formData).subscribe(
         (res: any) => {        
           if (res) {
@@ -277,7 +297,16 @@ export class AppDialogCourseComponent {
                    
           }
               
-        }
+        },
+        (error: any) => {
+          // Case error: handle the error here
+          this.openSnackBar(error.error.message, 'error');
+          this.loadingSpinner = false;  // Stop spinner if error happens
+          console.error('Error fetching courses:', error);
+       
+          // Optionally show an error message to the user
+          this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+        } 
       );
     
   }
@@ -295,7 +324,7 @@ export class AppDialogCourseComponent {
   }
 
   converImage(imagePath: any) {
-    console.log('imagePath',imagePath)
+    // console.log('imagePath',imagePath)
     // const baseUrl = 'http://localhost:3000';
     let cleanedImagePath = null
     const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
@@ -342,7 +371,17 @@ export class AppDialogCourseComponent {
 @Component({
   selector: 'dialog-overview',
   standalone: true,
-  imports: [MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatButtonModule,MatProgressSpinnerModule, MatIconModule, CommonModule],
+  imports: [
+    MatDialogActions, 
+    MatDialogClose, 
+    MatDialogTitle, 
+    MatDialogContent, 
+    MatButtonModule,
+    MatProgressSpinnerModule, 
+    MatIconModule, 
+    CommonModule, 
+    MatDividerModule
+  ],
   templateUrl: 'dialog-overview.component.html',
 })
 export class AppDialogOverviewComponent {
@@ -351,14 +390,10 @@ export class AppDialogOverviewComponent {
    
     public dialogRef: MatDialogRef<AppDialogOverviewComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public dashboardService: dashboardService,
-    
+    public dashboardService: dashboardService,   
   
-  ) {
-
-  }
+  ) { }
   public loadingSpinner: boolean = false;
-
   save(): void {
     this.loadingSpinner = true
     console.log('save',this.data)
@@ -380,12 +415,13 @@ export class AppDialogOverviewComponent {
       },
       (error: any) => {
         // Case error: handle the error here
+        this.openSnackBar(error.error.message, 'error');
         this.loadingSpinner = false;  // Stop spinner if error happens
         console.error('Error fetching courses:', error);
-        console.log('error.statusText', error.statusText)
+     
         // Optionally show an error message to the user
         this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
-      }    
+      }  
       
     )
   }

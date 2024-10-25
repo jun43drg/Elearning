@@ -2,7 +2,12 @@ import { NavItem } from './nav-item/nav-item';
 
 export const navItems: NavItem[] = [
   {
-    displayName: 'Dashboard',
+    displayName: 'Home',
+    iconName: 'home',
+    route: '/home',
+  },
+  {
+    displayName: 'My Courses',
     iconName: 'aperture',
     route: '/dashboard',
   },

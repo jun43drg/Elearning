@@ -9,7 +9,10 @@
       alt="Photo of a Shiba Inu"
       height="440"
     />
-    <div class="card-overlay h-100 d-flex align-items-end justify-content-end">
+    <div class="card-overlay h-100 d-flex align-items-center justify-content-between">
+     
+      <div class="m-l-12" (click)="goToDashboardDetail()"><i-tabler style="cursor: pointer; color: #5d87ff;" name="arrow-left" class="icon-40"></i-tabler></div>
+
       <mat-chip class="f-s-12 f-w-600 m-y-16 m-r-16 bg-white"
         >2 mins Read</mat-chip
       >
@@ -73,10 +76,14 @@
           <div class="row">
             <div class="col-lg-11">
               <div class="text-center">
-                <iframe width="600" height="400" [src]="safeUrl(item.value)" frameborder="0" allowfullscreen></iframe>
+                <video width="600" height="400" controls>
+                  <source src="{{item.value}}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
               </div>
+              
             </div>
-            <div class="col-lg-1 d-flex align-items-center justify-content-center">
+            <div  *ngIf="isButtonPermission()" class="col-lg-1 d-flex align-items-center justify-content-center">
               <mat-icon style="cursor: pointer; " (click)="openDialog('Edit', item)">settings</mat-icon>
               <mat-icon style="cursor: pointer; " (click)="openDialogRemove('0ms', '0ms', item)" >delete</mat-icon>
             </div>
@@ -97,7 +104,7 @@
                  />
               </div>
             </div>
-            <div class="col-lg-1 d-flex align-items-center justify-content-center">
+            <div  *ngIf="isButtonPermission()" class="col-lg-1 d-flex align-items-center justify-content-center">
               <mat-icon style="cursor: pointer; " (click)="openDialog('Edit', item)">settings</mat-icon>
               <mat-icon style="cursor: pointer; " (click)="openDialogRemove('0ms', '0ms', item)" >delete</mat-icon>
             </div>
@@ -109,7 +116,7 @@
             <div class="col-lg-11">
               <h3 class="f-w-{{item.bold ? '700' : '100'}}" >{{item.value}}</h3>
             </div>
-            <div class="col-lg-1 d-flex align-items-center justify-content-center">
+            <div  *ngIf="isButtonPermission()" class="col-lg-1 d-flex align-items-center justify-content-center">
               <mat-icon style="cursor: pointer; " (click)="openDialog('Edit', item)">settings</mat-icon>
               <mat-icon style="cursor: pointer; "  (click)="openDialogRemove('0ms', '0ms', item)" >delete</mat-icon>
             </div>
@@ -123,7 +130,7 @@
                 {{item.value}}
               </p>
             </div>
-            <div class="col-lg-1 d-flex align-items-center justify-content-center">
+            <div  *ngIf="isButtonPermission()" class="col-lg-1 d-flex align-items-center justify-content-center">
               <mat-icon style="cursor: pointer; " (click)="openDialog('Edit', item)">settings</mat-icon>
               <mat-icon style="cursor: pointer; " (click)="openDialogRemove('0ms', '0ms', item)" >delete</mat-icon>
             </div>
@@ -135,7 +142,7 @@
             <div class="col-lg-11">
               <li class="f-w-{{item.bold ? '700' : '100'}}">{{item.value}}</li>
             </div>
-            <div class="col-lg-1 d-flex align-items-center justify-content-center">
+            <div *ngIf="isButtonPermission()" class="col-lg-1 d-flex align-items-center justify-content-center"  >
               <mat-icon style="cursor: pointer; " (click)="openDialog('Edit', item)">settings</mat-icon>
               <mat-icon style="cursor: pointer; " (click)="openDialogRemove('0ms', '0ms', item)" >delete</mat-icon>
             </div>
@@ -143,7 +150,7 @@
         </div>
       </div>
       
-      <div class="d-block m-t-16 ">
+      <div class="d-block m-t-16 " *ngIf="isButtonPermission()" >
         <button mat-flat-button (click)="openDialog('Add', {})"  color="primary">
           Add
         </button>

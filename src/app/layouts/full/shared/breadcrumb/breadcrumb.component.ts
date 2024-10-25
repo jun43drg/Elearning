@@ -20,7 +20,7 @@ export class AppBreadcrumbComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private titleService: Title
-  ) {
+  ) {   
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .pipe(map(() => this.activatedRoute))
@@ -39,6 +39,7 @@ export class AppBreadcrumbComponent {
         // tslint:disable-next-line - Disables all
         this.titleService.setTitle(event['title'] + ' - Angular 18');
         this.pageInfo = event;
+       
       });
   }
 }

@@ -17,7 +17,9 @@ export class dashboardService {
   detailId: string = '';
   private url = 'https://elearning-be-h3lj.onrender.com'
   // private url = 'http://localhost:3000';
-  public token = localStorage.getItem('tokens');
+
+ 
+  // public token = localStorage.getItem('tokens');
   // private sourceList: CourseListModel =
   //   new CourseListModel();
 
@@ -39,16 +41,115 @@ export class dashboardService {
   public sourceContentDetailList$: Observable<CourseListModel | null> =
   this.sourceContentDetailListDisplay.asObservable();
 
+  // list user apply course
+  private listUserApplyCourseListDisplay =
+  new BehaviorSubject<CourseListModel | null>(null);
+  public listUserApplyCourseList$: Observable<any | null> =
+  this.listUserApplyCourseListDisplay.asObservable();
+
+  // list user not apply course
+  private listUserNotApplyCourseListDisplay =
+  new BehaviorSubject<CourseListModel | null>(null);
+  public listUserNotApplyCourseList$: Observable<any | null> =
+  this.listUserNotApplyCourseListDisplay.asObservable();
+
 // Thêm token vào headers
-public headers = new HttpHeaders({
-  'Authorization': `Bearer ${this.token}`
-});
+// public headers = new HttpHeaders({
+//   'Authorization': `Bearer ${this.token}`
+// });
 
   constructor(public httpClient: HttpClient, private router: Router) {
   }
 
+  addUserApplyCourse(data:any) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.post<any>(`${this.url}/course/add-user-to-course`,data,{ headers: headers });
+    return response.pipe(
+      tap((res)=>{
+      
+      }),
+      catchError((error) => {
+        console.log(error.statusText);
+        if (error.statusText === 'Unauthorized') {
+          localStorage.clear();
+          this.router.navigate(['/authentication/login']);
+        }
+        return throwError(() => error);
+      })
+    )
+  }
+
+  removeUserApplyCourse(data:any) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.post<any>(`${this.url}/course/remove-user-from-course`,data,{ headers: headers });
+    return response.pipe(
+      tap((res)=>{
+      
+      }),
+      catchError((error) => {
+        console.log(error.statusText);
+        if (error.statusText === 'Unauthorized') {
+          localStorage.clear();
+          this.router.navigate(['/authentication/login']);
+        }
+        return throwError(() => error);
+      })
+    )
+  }
+
+  getAllUserNotApplyCourse(course_id:any) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.get<any>(`${this.url}/course/get-user-not-active-course`,{ params: { course_id },headers: headers });
+
+    return response.pipe(
+      tap((res)=>{
+        this.listUserNotApplyCourseListDisplay.next(res.data);
+      }),
+      catchError((error) => {
+        console.log(error.statusText);
+        if (error.statusText === 'Unauthorized') {
+          localStorage.clear();
+          this.router.navigate(['/authentication/login']);
+        }
+        return throwError(() => error);
+      })
+    )
+  }
+
+  getAllUserApplyCourse(course_id:any) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.get<any>(`${this.url}/course/get-user-by-course`,{ params: { course_id },headers: headers });
+
+    return response.pipe(
+      tap((res)=>{
+        // console.log('res', res)
+        // this.sourceList.convertDataFromAPI(res.data);
+        this.listUserApplyCourseListDisplay.next(res.data);
+      }),
+      catchError((error) => {
+        console.log(error.statusText);
+        if (error.statusText === 'Unauthorized') {
+          localStorage.clear();
+          this.router.navigate(['/authentication/login']);
+        }
+        return throwError(() => error);
+      })
+    )
+  }
+
   deleteCourseContentDetail(data:any) {
-    const response = this.httpClient.post<any>(`${this.url}/course-content-detail/delete`,data,{ headers: this.headers });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.post<any>(`${this.url}/course-content-detail/delete`,data,{ headers: headers });
     return response.pipe(
       tap((res)=>{  
       
@@ -65,7 +166,10 @@ public headers = new HttpHeaders({
   }
 
   updateCourseContentDetail(data:any) {
-    const response = this.httpClient.post<any>(`${this.url}/course-content-detail/update`,data,{ headers: this.headers });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.post<any>(`${this.url}/course-content-detail/update`,data,{ headers: headers });
     return response.pipe(
       tap((res)=>{
       
@@ -80,12 +184,16 @@ public headers = new HttpHeaders({
     })
   )
   }
+ 
 
   
   createCourseContentDetail(data:any) {
     console.log('data',data)
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
     
-    const response = this.httpClient.post<any>(`${this.url}/course-content-detail/create`,data,{ headers: this.headers });
+    const response = this.httpClient.post<any>(`${this.url}/course-content-detail/create`,data,{ headers: headers });
 
     return response.pipe(
       tap((res)=>{
@@ -105,7 +213,10 @@ public headers = new HttpHeaders({
   }
 
   getAllCourseContentDetail(course_detail_id:any) {
-    const response = this.httpClient.get<any>(`${this.url}/course-content-detail/search-by-filter`,{ params: { course_detail_id: course_detail_id },headers: this.headers });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.get<any>(`${this.url}/course-content-detail/search-by-filter`,{ params: { course_detail_id: course_detail_id },headers: headers });
 
     return response.pipe(
       tap((res)=>{
@@ -125,7 +236,10 @@ public headers = new HttpHeaders({
   }
 
   createCourseDetail(data:any) {
-    const response = this.httpClient.post<any>(`${this.url}/course-detail/create`,data,{ headers: this.headers });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.post<any>(`${this.url}/course-detail/create`,data,{ headers: headers });
 
     return response.pipe(
       tap((res)=>{
@@ -145,9 +259,12 @@ public headers = new HttpHeaders({
   }
 
   updateCourseDetail(data:any) {
-    console.log('data',data)
     
-    const response = this.httpClient.post<any>(`${this.url}/course-detail/update`,data,{ headers: this.headers });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    
+    const response = this.httpClient.post<any>(`${this.url}/course-detail/update`,data,{ headers: headers });
 
     return response.pipe(
       tap((res)=>{
@@ -166,8 +283,31 @@ public headers = new HttpHeaders({
     
   }
 
+  deleteCourseDetail(data:any) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.post<any>(`${this.url}/course-detail/delete`,data,{ headers: headers });
+    return response.pipe(
+      tap((res)=>{
+      
+      }),
+      catchError((error) => {
+        console.log(error.statusText);
+        if (error.statusText === 'Unauthorized') {
+          localStorage.clear();
+          this.router.navigate(['/authentication/login']);
+        }
+        return throwError(() => error);
+      })
+    )
+  }
+
   getAllCourseDetail(course_id:any) {
-    const response = this.httpClient.get<any>(`${this.url}/course-detail/search-by-filter`,{ params: { course_id: course_id },headers: this.headers });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.get<any>(`${this.url}/course-detail/search-by-filter`,{ params: { course_id: course_id },headers: headers });
 
     return response.pipe(
       tap((res)=>{
@@ -188,7 +328,10 @@ public headers = new HttpHeaders({
   }
 
   deleteCourse(body:any) {
-    const response = this.httpClient.post<any>(`${this.url}/course/delete`,body,{ headers: this.headers });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.post<any>(`${this.url}/course/delete`,body,{ headers: headers });
     return response.pipe(
       tap((res)=>{
       
@@ -208,7 +351,11 @@ public headers = new HttpHeaders({
   
 
   getAllCourse() {
-    const response = this.httpClient.get<any>(`${this.url}/course/search-by-filter`,{ headers: this.headers });
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.get<any>(`${this.url}/course/search-by-filter`,{ headers: headers });
 
     return response.pipe(
       tap((res)=>{
@@ -228,9 +375,12 @@ public headers = new HttpHeaders({
   }
 
   createCourse(data:any) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
 
 
-    const response = this.httpClient.post<any>(`${this.url}/course/create`,data,{ headers: this.headers });
+    const response = this.httpClient.post<any>(`${this.url}/course/create`,data,{ headers: headers });
 
     return response.pipe(
       tap((res)=>{
@@ -250,7 +400,10 @@ public headers = new HttpHeaders({
   }
 
   updateCourse(data:any) {
-    const response = this.httpClient.post<any>(`${this.url}/course/update`,data,{ headers: this.headers });
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('tokens')}`
+    });
+    const response = this.httpClient.post<any>(`${this.url}/course/update`,data,{ headers: headers });
 
     return response.pipe(
       tap((res)=>{

@@ -10,7 +10,7 @@
             </mat-icon>
           </mat-form-field>
         </div>
-        <div class="col-lg-4 d-flex align-items-center justify-content-end">
+        <div *ngIf="isButtonPermission()" class="col-lg-4 d-flex align-items-center justify-content-end">
           <button mat-flat-button (click)="openDialog('Add', {})" color="primary">
             Thêm Chương Học
           </button>
@@ -18,10 +18,11 @@
       </div>
     </mat-card-content>
   </mat-card>
+  <div (click)="goToDashboard()"><i-tabler style="cursor: pointer; color: #5d87ff;" name="arrow-left" class="icon-40"></i-tabler></div>  
   <div class="m-t-24 d-flex justify-content-center" *ngIf="loadingSpinner" >
     <mat-spinner ></mat-spinner>
   </div>
-
+ 
   <div class="row" *ngIf="sourceDetailList$ | async">
     <div *ngFor="let courseDetail of sourceDetailList$ | async" class="col-sm-6 col-lg-4">
       <mat-card class="cardWithShadow overflow-hidden">
@@ -67,16 +68,22 @@
         </mat-card-actions> -->
 
         <mat-divider></mat-divider>
-        <div class="p-24 d-flex align-items-center" style="justify-content: space-between">
-          <button mat-flat-button color="primary" [routerLink]="['/dashboard/course-content-detail', courseDetail.id]" >
+        <div *ngIf="!isButtonPermission()" class="p-24 d-flex align-items-center justify-content-center" >
+          <button mat-flat-button color="accent" (click)="goPage(courseDetail.id)" class="w-100">
+            <mat-icon>open_in_new</mat-icon>
+            Enroll
+          </button>         
+        </div>
+        <div *ngIf="isButtonPermission()" class="p-24 d-flex align-items-center" style="justify-content: space-between">
+          <button mat-flat-button color="primary" (click)="goPage(courseDetail.id)" >
             <mat-icon>open_in_new</mat-icon>
             Enroll
           </button>
-          <button mat-flat-button color="accent" (click)="openDialog('Edit', courseDetail)" >
+          <button mat-flat-button color="accent" (click)="openDialog('Edit', courseDetail)"  >
             <mat-icon>settings</mat-icon>
             Edit
           </button>
-          <button mat-flat-button color="warn" (click)="openDialogRemove('0ms', '0ms', courseDetail)" >
+          <button mat-flat-button color="warn" (click)="openDialogRemove('0ms', '0ms', courseDetail)"  >
             <mat-icon>delete</mat-icon>
             Remove
           </button>         

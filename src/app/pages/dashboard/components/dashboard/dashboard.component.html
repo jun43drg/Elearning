@@ -13,7 +13,7 @@
           </mat-icon>
         </mat-form-field>
       </div>
-      <div class="col-lg-4 d-flex align-items-center justify-content-end">
+      <div *ngIf="isButtonPermission()" class="col-lg-4 d-flex align-items-center justify-content-end">
         <button mat-flat-button (click)="openDialog('Add', {})" color="primary">
           Thêm Khoá Học
         </button>
@@ -21,6 +21,8 @@
     </div>
   </mat-card-content>
 </mat-card>
+
+
 
 <!-- @for(blogPost of this.sourceList$;track blogPost.id){
   <div>hau</div>
@@ -46,26 +48,27 @@
       <div
         class="card-overlay h-100 d-flex p-16 p-y-0 align-items-end justify-content-between"
       >
-        <mat-chip class="f-s-12 m-y-16 f-w-600 bg-white">{{
+        <div class="f-s-14 m-t-16 f-w-600 bg-white ellipsis-1-line">{{
           blogPost.title
-        }}</mat-chip>
-        <mat-chip class="f-s-12 f-w-600 m-y-16 bg-white">{{
+        }}</div>
+        <!-- <mat-chip class="f-s-12 f-w-600 m-y-16 bg-white">{{
           blogPost.time_study
-        }}</mat-chip>
+        }}</mat-chip> -->
       </div>
+      
 
       
 
       <mat-card-content class="p-y-24">
 
-        <mat-card-title style="text-overflow: ellipsis; overflow: hidden;height: 3rem;" class="mat-headline-6 m-t-15">{{
+        <mat-card-title class="mat-headline-6 m-t-15 ellipsis-2-lines">{{
           blogPost.description
         }}</mat-card-title>
         <div class="d-flex align-items-center justify-content-center m-t-24">
           <div class="d-flex align-items-center">
             <span class="m-r-12 f-s-14 mat-subtitle-2 d-flex align-items-center"
-              ><i-tabler name="eye" class="icon-18 m-r-4"></i-tabler
-              >9,125</span
+              ><i-tabler name="user" class="icon-18 m-r-4"></i-tabler
+              >{{blogPost.registered | number:'1.0-0'}}</span
             >
             <span class="f-s-14 mat-subtitle-2 d-flex align-items-center"
               ><i-tabler name="message-2" class="icon-18 m-r-4"></i-tabler
@@ -75,26 +78,41 @@
           <span
             class="m-l-auto f-s-14 mat-subtitle-2 d-flex align-items-center"
           >
-            <i-tabler name="point" class="icon-14 m-r-4"></i-tabler>
-            Sat, Dec 23
+            <i-tabler name="alarm" class="icon-18 m-r-4"></i-tabler>
+            {{blogPost.time_study}}
           </span>
+        </div>        
+
+        <div *ngIf="!isButtonPermission()" class="m-t-24 d-flex align-items-center justify-content-center" >
+          <button mat-flat-button color="primary" (click)="selectCourse(blogPost.id)" class="w-100">
+            <mat-icon>open_in_new</mat-icon>
+            Enroll
+          </button>         
         </div>
-        <div class="m-t-24 d-flex align-items-center" style="justify-content: space-between">
+
+        <div *ngIf="isButtonPermission()" class="m-t-24 d-flex align-items-center" style="justify-content: space-between">
           <button mat-flat-button color="primary" (click)="selectCourse(blogPost.id)">
             <mat-icon>open_in_new</mat-icon>
             Enroll
           </button>
-          <button mat-flat-button color="accent" (click)="openDialog('Edit',blogPost)">
+          <button mat-flat-button color="accent"  (click)="openDialog('Edit',blogPost)">
             <mat-icon>settings</mat-icon>
             Edit
           </button>
           <button mat-flat-button color="warn" (click)="openDialogRemove('0ms', '0ms', blogPost)">
             <mat-icon>delete</mat-icon>
             Remove
-          </button>
-
-         
+          </button>         
         </div>
+
+        <div *ngIf="isButtonPermission()" class="m-t-24 d-flex align-items-center" style="justify-content: space-between">
+          <button mat-flat-button color="primary" class="w-100" (click)="openApllyDialog(blogPost)">
+            <i-tabler name="users-group" class="icon-18 m-r-4"></i-tabler
+              >
+            Apply User
+          </button>                  
+        </div>
+        
       </mat-card-content>
     </mat-card>
   </div>
@@ -103,6 +121,12 @@
 
  
 </div>
+
+
+
+
+
+
 
 
 

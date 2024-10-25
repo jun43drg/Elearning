@@ -47,22 +47,19 @@ export class AppSideLoginComponent {
   }
 
   async submit() {
-   
-    // const result = await this.services.getLogin(this.form.value).subscribe((res) => {
-    //   console.log('res', res);
-    // });
-    // console.log(result);
+
     this.loadingSpinner = true;
     this.services.getLogin(this.form.value).subscribe(
       response => {
-        if(response) {
-          
-          localStorage.clear();
-          localStorage.setItem('tokens', response.accessToken);
-          
+        if(response) {          
+          localStorage.clear();          
           setTimeout(() => {
+            const role:any = [];
+            response.role.map((item:any) => role.push(item.name_role));            
+            localStorage.setItem('tokens', response.accessToken);
+            localStorage.setItem('role', JSON.stringify(role));
             this.openSnackBar('Login successful', 'success');
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/home']);
           }, 2000);
         }
         

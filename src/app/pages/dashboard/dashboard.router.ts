@@ -38,8 +38,8 @@ export const DashboardRoutes: Routes = [
         data: {
           title: 'Course Content Detail',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Course Detail' },
+            { title: 'Course', url: `/dashboard` },
+            { title: 'Course Content Detail' },
           ],
         },
       },
@@ -49,7 +49,7 @@ export const DashboardRoutes: Routes = [
         data: {
           title: 'Course Detail',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Dashboard', url: '/dashboard' },
             { title: 'Course Detail' },
           ],
         },

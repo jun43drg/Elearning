@@ -3,7 +3,7 @@ import { dashboardService } from '../../dashboard.service';
 
 
 
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { MatCardModule } from '@angular/material/card';
 import { TablerIconsModule } from 'angular-tabler-icons';
@@ -77,6 +77,7 @@ export class CourseContentDetailsComponent {
   sourceContentDetailList$: Observable<any> | undefined;
   constructor(
     activatedRouter: ActivatedRoute, 
+    private router: Router,
     public dashboardService: dashboardService, 
     public dialog: MatDialog,
     private sanitizer: DomSanitizer) {
@@ -85,8 +86,7 @@ export class CourseContentDetailsComponent {
     
   }
 
-  ngOnInit(): void {
-    
+  ngOnInit(): void {  
 
     this.loadingSpinner = true;
     this.sourceContentDetailList$ = this.dashboardService.sourceContentDetailList$;
@@ -99,6 +99,14 @@ export class CourseContentDetailsComponent {
     )
 
     console.log('this.sourceContentDetailListzzz',this.sourceContentDetailList$);
+  }
+  isButtonPermission(): boolean {
+    const role = JSON.parse(localStorage.getItem('role') || '[]');
+    return ['Admin', 'Teacher'].some(r => role.includes(r));
+  }
+
+  goToDashboardDetail(): void {
+    this.router.navigate([`/dashboard/${localStorage.getItem('courseId')}`]);
   }
 
   toggleReply(){}
@@ -206,6 +214,7 @@ export class AppDialogCourseContentDetailComponent {
       this.local_data.imagePath = '';
     }
   }
+
   
 
   // doAction(): void {
@@ -251,7 +260,16 @@ export class AppDialogCourseContentDetailComponent {
             }  
           );          
         }        
-      }
+      },
+      (error: any) => {
+        // Case error: handle the error here
+        this.openSnackBar(error.error.message, 'error');
+        this.loadingSpinner = false;  // Stop spinner if error happens
+        console.error('Error fetching courses:', error);
+     
+        // Optionally show an error message to the user
+        this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+      } 
     );
     
   }
@@ -296,7 +314,16 @@ export class AppDialogCourseContentDetailComponent {
             }  
           );          
         }        
-      }
+      },
+      (error: any) => {
+        // Case error: handle the error here
+        this.openSnackBar(error.error.message, 'error');
+        this.loadingSpinner = false;  // Stop spinner if error happens
+        console.error('Error fetching courses:', error);
+     
+        // Optionally show an error message to the user
+        this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+      } 
     );
     
   }
@@ -316,7 +343,7 @@ export class AppDialogCourseContentDetailComponent {
   }
 
   converImage(imagePath: any) {
-    console.log('imagePath',imagePath)
+    // console.log('imagePath',imagePath)
     // const baseUrl = 'http://localhost:3000';
     let cleanedImagePath = null
     const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
@@ -408,13 +435,13 @@ export class AppDialogOverviewComponent {
       },
       (error: any) => {
         // Case error: handle the error here
+        this.openSnackBar(error.error.message, 'error');
         this.loadingSpinner = false;  // Stop spinner if error happens
-        this.openSnackBar('Delete failed', 'error');
         console.error('Error fetching courses:', error);
-        console.log('error.statusText', error.statusText)
+     
         // Optionally show an error message to the user
         this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
-      }    
+      }   
       
     )
   }

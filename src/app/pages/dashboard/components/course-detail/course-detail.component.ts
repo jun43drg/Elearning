@@ -52,17 +52,18 @@ export class CourseDetailComponent {
   sourceDetailList$: Observable<any> | undefined;
   private subscription!: Subscription;
   public loadingSpinner = false;
+  private _snackBar = inject(MatSnackBar)
 
   constructor(
     private courseService: dashboardService,  
     public dialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.courseList = this.courseService.getCourse();
   }
 
-  ngOnInit(): void {
-    
+  ngOnInit(): void {   
     this.loadingSpinner = true;
     this.sourceDetailList$ = this.courseService.sourceDetailList$;
     this.subscription = this.courseService.getAllCourseDetail(this.course_id).subscribe(
@@ -70,10 +71,33 @@ export class CourseDetailComponent {
         if(res){
           this.loadingSpinner = false;
         }
-      }
+      },
+      (error: any) => {
+        // Case error: handle the error here
+        this.openSnackBar(error.error.message, 'error');
+        this.loadingSpinner = false;  // Stop spinner if error happens
+        console.error('Error fetching courses:', error);
+     
+        // Optionally show an error message to the user
+        // this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+      } 
+      
     )
     console.log('this.sourceDetailList$',this.sourceDetailList$)
    
+  }
+  isButtonPermission(): boolean {
+    const role = JSON.parse(localStorage.getItem('role') || '[]');
+    return ['Admin', 'Teacher'].some(r => role.includes(r));
+  }
+
+  durationInSeconds = 3;
+  openSnackBar(data:any, status: string) {
+
+    this._snackBar.openFromComponent(SnackbarComponent, {
+      duration: this.durationInSeconds * 1000,
+      data: { message: data, status: status  }, // Truyền dữ liệu
+    }); 
   }
 
   openDialogRemove(
@@ -90,7 +114,19 @@ export class CourseDetailComponent {
     });
   }
 
-  ngDestroy(): void {
+  goPage(courseDetailId: string) {
+    localStorage.removeItem('courseId'); 
+    localStorage.setItem('courseId', this.course_id);
+    this.router.navigate(['/dashboard/course-content-detail', courseDetailId]);
+  }
+
+  goToDashboard(){
+    this.router.navigate([`/dashboard`]);
+  }
+
+  ngOnDestroy(): void {
+    // localStorage.removeItem('courseId'); 
+    // localStorage.setItem('courseId', this.course_id);
    
     if (this.subscription) {
       
@@ -224,7 +260,16 @@ export class AppDialogCourseDetailComponent {
             }  
           );          
         }        
-      }
+      },
+      (error: any) => {
+        // Case error: handle the error here
+        this.openSnackBar(error.error.message, 'error');
+        this.loadingSpinner = false;  // Stop spinner if error happens
+        console.error('Error fetching courses:', error);
+     
+        // Optionally show an error message to the user
+        this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+      } 
     );
     
   }
@@ -262,7 +307,16 @@ export class AppDialogCourseDetailComponent {
             }  
           );          
         }        
-      }
+      },
+      (error: any) => {
+        // Case error: handle the error here
+        this.openSnackBar(error.error.message, 'error');
+        this.loadingSpinner = false;  // Stop spinner if error happens
+        console.error('Error fetching courses:', error);
+     
+        // Optionally show an error message to the user
+        this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+      } 
     );
     
   }
@@ -282,7 +336,7 @@ export class AppDialogCourseDetailComponent {
   }
 
   converImage(imagePath: any) {
-    console.log('imagePath',imagePath)
+    // console.log('imagePath',imagePath)
     // const baseUrl = 'http://localhost:3000';
     let cleanedImagePath = null
     const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
@@ -343,34 +397,35 @@ export class AppDialogOverviewComponent {
   public loadingSpinner: boolean = false;
 
   save(): void {
-    // this.loadingSpinner = true
-    // console.log('save',this.data)
-    // const body = {
-    //   id: this.data.id,
-    // }
-    // this.dashboardService.deleteCourse(body).subscribe(
-    //   (res: any) => {        
-    //     if (res) {
-    //       this.dashboardService.getAllCourse().subscribe(
-    //         (res: any) => {
-    //          if(res){
-    //           this.loadingSpinner = false;
-    //           this.dialogRef.close();
-    //          }
-    //         }
-    //       );          
-    //     }        
-    //   },
-    //   (error: any) => {
-    //     // Case error: handle the error here
-    //     this.loadingSpinner = false;  // Stop spinner if error happens
-    //     console.error('Error fetching courses:', error);
-    //     console.log('error.statusText', error.statusText)
-    //     // Optionally show an error message to the user
-    //     this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
-    //   }    
+    this.loadingSpinner = true
+    console.log('save',this.data)
+    const body = {
+      id: this.data.id,
+    }
+    this.dashboardService.deleteCourseDetail(body).subscribe(
+      (res: any) => {        
+        if (res) {
+          this.dashboardService.getAllCourseDetail(this.data.course_id).subscribe(
+            (res: any) => {
+             if(res){
+              this.loadingSpinner = false;
+              this.dialogRef.close();
+             }
+            }
+          );          
+        }        
+      },
+      (error: any) => {
+        // Case error: handle the error here
+        this.openSnackBar(error.error.message, 'error');
+        this.loadingSpinner = false;  // Stop spinner if error happens
+        console.error('Error fetching courses:', error);
+     
+        // Optionally show an error message to the user
+        this.dialogRef.close({ event: 'error', message: 'Failed to load courses' });
+      }  
       
-    // )
+    )
   }
 
   durationInSeconds = 3;
