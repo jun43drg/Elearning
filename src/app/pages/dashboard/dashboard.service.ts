@@ -15,8 +15,8 @@ export class dashboardService {
   blogPosts: any[] = [];
   
   detailId: string = '';
-  // private url = 'https://elearning-be-h3lj.onrender.com'
-  private url = 'http://localhost:3000';
+  private url = 'https://elearning-be-h3lj.onrender.com'
+  // private url = 'http://localhost:3000';
 
  
   // public token = localStorage.getItem('tokens');

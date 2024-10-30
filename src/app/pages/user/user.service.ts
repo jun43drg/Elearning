@@ -10,8 +10,8 @@ import { Router } from "@angular/router";
     providedIn: 'root'
 })
 export class UserService {
-  // private url = 'https://elearning-be-h3lj.onrender.com'
-  private url = 'http://localhost:3000';
+  private url = 'https://elearning-be-h3lj.onrender.com'
+  // private url = 'http://localhost:3000';
 
   private userListDisplay =
   new BehaviorSubject<any | null>(null);
