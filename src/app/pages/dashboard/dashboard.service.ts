@@ -15,8 +15,8 @@ export class dashboardService {
   blogPosts: any[] = [];
   
   detailId: string = '';
-  private url = 'https://elearning-be-h3lj.onrender.com'
-  // private url = 'http://localhost:3000';
+  // private url = 'https://elearning-be-h3lj.onrender.com'
+  private url = 'http://localhost:3000';
 
  
   // public token = localStorage.getItem('tokens');
@@ -52,6 +52,16 @@ export class dashboardService {
   new BehaviorSubject<CourseListModel | null>(null);
   public listUserNotApplyCourseList$: Observable<any | null> =
   this.listUserNotApplyCourseListDisplay.asObservable();
+
+  // total record
+  private readonly totalRecord = new BehaviorSubject<number>(0);
+  public readonly totalRecord$ = this.totalRecord.asObservable();
+
+  private readonly totalRecordApply = new BehaviorSubject<number>(0);
+  public readonly totalRecordApply$ = this.totalRecordApply.asObservable();
+
+  private readonly totalRecordNotApply = new BehaviorSubject<number>(0);
+  public readonly totalRecordNotApply$ = this.totalRecordNotApply.asObservable();
 
 // Thêm token vào headers
 // public headers = new HttpHeaders({
@@ -101,15 +111,17 @@ export class dashboardService {
     )
   }
 
-  getAllUserNotApplyCourse(course_id:any) {
+  getAllUserNotApplyCourse(course_id:any,filter: any = { page: 1, size: 5, search: '' }) {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('tokens')}`
     });
-    const response = this.httpClient.get<any>(`${this.url}/course/get-user-not-active-course`,{ params: { course_id },headers: headers });
+    filter.course_id = course_id
+    const response = this.httpClient.get<any>(`${this.url}/course/get-user-not-active-course`,{ params: filter,headers: headers });
 
     return response.pipe(
       tap((res)=>{
         this.listUserNotApplyCourseListDisplay.next(res.data);
+        this.totalRecordNotApply.next(res.total)
       }),
       catchError((error) => {
         console.log(error.statusText);
@@ -122,17 +134,19 @@ export class dashboardService {
     )
   }
 
-  getAllUserApplyCourse(course_id:any) {
+  getAllUserApplyCourse(course_id:any,filter: any = { page: 1, size: 10, search: '' }) {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('tokens')}`
     });
-    const response = this.httpClient.get<any>(`${this.url}/course/get-user-by-course`,{ params: { course_id },headers: headers });
+    filter.course_id = course_id
+    const response = this.httpClient.get<any>(`${this.url}/course/get-user-by-course`,{ params:  filter ,headers: headers });
 
     return response.pipe(
       tap((res)=>{
         // console.log('res', res)
         // this.sourceList.convertDataFromAPI(res.data);
         this.listUserApplyCourseListDisplay.next(res.data);
+        this.totalRecordApply.next(res.total)
       }),
       catchError((error) => {
         console.log(error.statusText);
@@ -350,18 +364,19 @@ export class dashboardService {
   
   
 
-  getAllCourse() {
+  getAllCourse(filter: any = { page: 1, size: 10, search: '' }) {
     
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('tokens')}`
     });
-    const response = this.httpClient.get<any>(`${this.url}/course/search-by-filter`,{ headers: headers });
+    const response = this.httpClient.get<any>(`${this.url}/course/search-by-filter`,{ params: filter,headers: headers });
 
     return response.pipe(
       tap((res)=>{
         // console.log('res', res)
         // this.sourceList.convertDataFromAPI(res.data);
         this.sourceListDisplay.next(res.data);
+        this.totalRecord.next(res.total)
       }),
       catchError((error) => {
         console.log(error.statusText);

@@ -5,11 +5,11 @@
 
 @if(action !== 'Delete') {
   
-<mat-dialog-content style="max-width: 1400px">
+<mat-dialog-content style="max-width: 800px">
   
   <form #courseForm="ngForm">
 
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+    <!-- <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
       
       <mat-tab label="Link">
         
@@ -57,146 +57,171 @@
         </div>
       </mat-tab>
       
-    </mat-tab-group>
+    </mat-tab-group> -->
 
     
 
     <div class="row">
-      <div class="col-lg-3">
+      <div class="col-lg-4">
         <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-            >Status:</mat-label
+            >Name</mat-label
           >
         <mat-form-field appearance="outline" class="w-100">
           <input
             type="text"
             matInput
             
-            id="status"
+            id="Name"
             name="name"
-            [(ngModel)]="local_data.status"
-            placeholder="Status"
+            [(ngModel)]="local_data.name_user"
+            placeholder="Name"
           />
           <mat-icon matPrefix>
-            <i-tabler name="stack" class="icon-20 d-flex"></i-tabler>
+            <i-tabler name="user" class="icon-20 d-flex"></i-tabler>
           </mat-icon>
         </mat-form-field>
       </div>
-      <div class="col-lg-6">
+      <div class="col-lg-4">
         <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-            >Title:</mat-label
+            >Gender:</mat-label
           >
         <mat-form-field appearance="outline" class="w-100">
-          <input
-            type="text"
-            matInput
-            required
-            id="title"
-            name="title"
-            [(ngModel)]="local_data.title"
-            placeholder="Title"
-          />
-          <mat-icon matPrefix>
-            <i-tabler name="text-caption" class="icon-20 d-flex"></i-tabler>
-          </mat-icon>
-        </mat-form-field>
-      </div>
-      <div class="col-lg-3">
-        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-            >Time study:</mat-label
-          >
-        <mat-form-field appearance="outline" class="w-100">
-          <input
-            type="text"
-            matInput
-            required
-            id="time_study"
-            name="time_study"
-            [(ngModel)]="local_data.time_study"
-            placeholder="Time study"
-          />
-          <mat-icon matPrefix>
-            <i-tabler name="alarm" class="icon-20 d-flex"></i-tabler>
-          </mat-icon>
-        </mat-form-field>
-      </div>
-      <div class="col-lg-12">
-        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-            >Description:</mat-label
-          >
-        <mat-form-field appearance="outline" class="w-100">
-          <input
-            type="text"
-            matInput
-            required
-            id="description"
-            name="description"
-            [(ngModel)]="local_data.description"
-            placeholder="description"
-          />
-          <mat-icon matPrefix>
-            <i-tabler name="align-box-left-middle" class="icon-20 d-flex"></i-tabler>
-          </mat-icon>
-        </mat-form-field>
-      </div>
-
-      <div class="col-lg-5">
-        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-            >Price:</mat-label
-          >
-        <mat-form-field appearance="outline" class="w-100">
-          <input
-            type="text"
-            matInput
-            required
-            id="price"
-            name="price"
-            [(ngModel)]="local_data.price"
-            placeholder="price"
-          />
-          <mat-icon matPrefix>
-            <i-tabler name="coin" class="icon-20 d-flex"></i-tabler>
-          </mat-icon>
-        </mat-form-field>
-      </div>
-
-      <div class="col-lg-5">
-        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-            >Old price:</mat-label
-          >
-        <mat-form-field appearance="outline" class="w-100">
-          <input
-            type="text"
-            matInput
-            required
-            id="old_price"
-            name="old_price"
-            [(ngModel)]="local_data.old_price"
-            placeholder="Old price"
-          />
-          <mat-icon matPrefix>
-            <i-tabler name="coin" class="icon-20 d-flex"></i-tabler>
-          </mat-icon>
-        </mat-form-field>
-      </div>
-
-      <div class="col-lg-2">
-        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
-            >Star:</mat-label
-          >
-        <mat-form-field appearance="outline" class="w-100" >          
-          <mat-select [(ngModel)]="local_data.star" placeholder="Star" name="star">
-            <mat-option [value]="1">1</mat-option>
-            <mat-option [value]="2">2</mat-option>
-            <mat-option [value]="3">3</mat-option>
-            <mat-option [value]="4">4</mat-option>
-            <mat-option [value]="5">5</mat-option>
+          <mat-select [(ngModel)]="local_data.gender" placeholder="Gender" name="Gender">
+            <mat-option [value]="'male'">Male</mat-option>
+            <mat-option [value]="'female'">Female</mat-option>         
+          
           </mat-select>
           <mat-icon matPrefix>
-            <i-tabler name="star" class="fill-warning icon-20 d-flex"></i-tabler>
+            <i-tabler name="friends" class="icon-20 d-flex"></i-tabler>
+          </mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-4">
+        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+            >Date of birth:</mat-label
+          >
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            type="date"
+            matInput
+            required
+            id="date_of_birth"
+            name="date_of_birth"
+            [(ngModel)]="local_data.date_of_birth"
+            placeholder="Date of birth"
+          />
+          <mat-icon matPrefix>
+            <i-tabler name="cake" class="icon-20 d-flex"></i-tabler>
+          </mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-6">
+        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+            >Email:</mat-label
+          >
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            type="text"
+            matInput
+            required
+            id="email"
+            name="email"
+            [(ngModel)]="local_data.email"
+            placeholder="Email"
+          />
+          <mat-icon matPrefix>
+            <i-tabler name="mail" class="icon-20 d-flex"></i-tabler>
           </mat-icon>
         </mat-form-field>
       </div>
      
+      <div class="col-lg-6" >
+        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+            >Password:</mat-label
+          >
+        <mat-form-field appearance="outline" class="w-100">
+         
+          <input id="password"
+          name="password"
+          [(ngModel)]="local_data.password"
+          placeholder="Password" required matInput [type]="hide() ? 'password' : 'text'" />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="clickEvent($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide()"
+          >
+            <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+     
+      
+
+      <div class="col-lg-6">
+        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+            >Phone:</mat-label
+          >
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            type="text"
+            matInput
+            required
+            id="mobie"
+            name="mobie"
+            [(ngModel)]="local_data.mobie"
+            placeholder="Phone"
+          />
+          <mat-icon matPrefix>
+            <i-tabler name="phone" class="icon-20 d-flex"></i-tabler>
+          </mat-icon>
+        </mat-form-field>
+      </div>
+
+      
+
+      <div class="col-lg-6" *ngIf="action == 'Add'" >
+        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+            >Role </mat-label
+          >
+        <mat-form-field appearance="outline" class="w-100" >          
+          <mat-select [(ngModel)]="local_data.role_id" placeholder="Role" name="Role" multiple>
+            <mat-option [value]="1">Admin</mat-option>
+            <mat-option [value]="2">Teacher</mat-option>
+            <mat-option [value]="3">Student</mat-option>
+          
+          </mat-select>
+          <mat-icon matPrefix>
+            <i-tabler name="user-exclamation" class="icon-20 d-flex"></i-tabler>
+          </mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="col-lg-6" *ngIf="action == 'Update'" >
+        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+            >Role </mat-label
+          >
+        <mat-form-field appearance="outline" class="w-100" >          
+          <mat-select [(ngModel)]="local_data.role_id" placeholder="Role" name="Role" multiple>
+            <!-- <mat-option *ngFor="let item of listRole" [value]="item.id">{{item.name_role}}</mat-option> -->
+            <mat-option [value]="1">Admin</mat-option>
+            <mat-option [value]="2">Teacher</mat-option>
+            <mat-option [value]="3">Student</mat-option>
+          
+          </mat-select>
+          <mat-icon matPrefix>
+            <i-tabler name="user-exclamation" class="icon-20 d-flex"></i-tabler>
+          </mat-icon>
+        </mat-form-field>
+      </div>
+
+    
+
+      
 
      
     </div>

@@ -24,6 +24,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MaterialModule } from 'src/app/material.module';
 import { MAT_SNACK_BAR_DATA, MatSnackBar } from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 
 
@@ -42,7 +43,8 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialog
     MatSelectModule, 
     CommonModule,
     MatProgressSpinnerModule,
-    MatIconModule
+    MatIconModule,
+    OverlayModule
    
     
   ],
@@ -179,8 +181,22 @@ export class CourseContentDetailsComponent {
   // tslint:disable-next-line: component-selector
   selector: 'add-dialog-course-content-detail',
   standalone: true,
-  imports: [MaterialModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [MaterialModule, FormsModule, ReactiveFormsModule, CommonModule, OverlayModule, TablerIconsModule],
   templateUrl: 'add-dialog-course-content-detail.html',
+  styles: [`
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.5); /* Làm mờ màn hình */
+      z-index: 1000; /* Đảm bảo overlay ở trên cùng */
+    }
+  `],
   providers: [DatePipe],
 })
 // tslint:disable-next-line: component-class-suffix
@@ -344,9 +360,9 @@ export class AppDialogCourseContentDetailComponent {
 
   converImage(imagePath: any) {
     // console.log('imagePath',imagePath)
-    // const baseUrl = 'http://localhost:3000';
+    const baseUrl = 'http://localhost:3000';
     let cleanedImagePath = null
-    const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
+    // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
     // Loại bỏ 'uploads' khỏi đường dẫn
   if(imagePath.includes('uploads')){
@@ -397,6 +413,20 @@ export class AppDialogCourseContentDetailComponent {
              CommonModule
             ],
   templateUrl: 'dialog-overview.component.html',
+  styles: [`
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.5); /* Làm mờ màn hình */
+      z-index: 1000; /* Đảm bảo overlay ở trên cùng */
+    }
+  `],
 })
 export class AppDialogOverviewComponent {
   private _snackBar = inject(MatSnackBar)

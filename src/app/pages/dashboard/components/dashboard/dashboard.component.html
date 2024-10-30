@@ -21,15 +21,20 @@
     </div>
   </mat-card-content>
 </mat-card>
-
+<div *ngIf="totalRecord$ | async as length" class="m-b-8">
+  <mat-paginator (page)="handlePageEvent($event)" [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+    [hidePageSize]="false" aria-label="Chọn trang">
+</mat-paginator>
+</div>
+<div class="m-t-24 d-flex justify-content-center overlay" *ngIf="loadingSpinner" >
+  <mat-spinner ></mat-spinner>
+</div>
 
 
 <!-- @for(blogPost of this.sourceList$;track blogPost.id){
   <div>hau</div>
 } -->
-<div class="m-t-24 d-flex justify-content-center" *ngIf="loadingSpinner" >
-  <mat-spinner ></mat-spinner>
-</div>
+
 <div class="row" *ngIf="sourceList$ | async">
  
 
@@ -43,7 +48,7 @@
         mat-card-image
         src="{{converImage(blogPost.image)}}"
         alt="Photo of a Shiba Inu"
-        style="height: 203px"
+        style="height: 180px"
       />
       <div
         class="card-overlay h-100 d-flex p-16 p-y-0 align-items-end justify-content-between"
@@ -59,7 +64,7 @@
 
       
 
-      <mat-card-content class="p-y-24">
+      <mat-card-content class="p-b-24">
 
         <mat-card-title class="mat-headline-6 m-t-15 ellipsis-2-lines">{{
           blogPost.description
@@ -121,6 +126,12 @@
 
  
 </div>
+
+
+
+
+
+
 
 
 

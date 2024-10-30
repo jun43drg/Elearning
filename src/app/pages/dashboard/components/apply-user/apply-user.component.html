@@ -1,8 +1,10 @@
+
 <h2 class="f-w-500 m-b-24" mat-dialog-title><strong>Apply Users</strong></h2>
-<div class="m-t-24 d-flex justify-content-center" *ngIf="loadingSpinner" >
+<div class="m-t-24 d-flex justify-content-center overlay" *ngIf="loadingSpinner" >
     <mat-spinner ></mat-spinner>
-  </div>
-<mat-dialog-content style="max-width: 1600px">
+</div>
+
+<mat-dialog-content style="max-width: 1600px ; min-height: 750px" >
    
 
     <div class="d-flex gap-24" >
@@ -12,7 +14,9 @@
                     <div class="row justify-content-between">
                         <div class="col-lg-12">
                             <mat-form-field appearance="outline" class="w-100 hide-hint">
-                                <input matInput placeholder="Search User"  />
+                                <input matInput placeholder="Search User"
+                                (keyup)="applyFilterApply($any($event.target).value)"
+                                />
                                 <mat-icon matSuffix>
                                     <i-tabler name="search" class="icon-20"></i-tabler>
                                 </mat-icon>
@@ -27,6 +31,11 @@
                 </mat-card-content>
             </mat-card>
             <h3 class="text-center">User đã đăng ký</h3>
+            <div *ngIf="totalRecordApply$ | async as length">
+                <mat-paginator (page)="handlePageEventApply($event)" [length]="length" [pageIndex]="pageIndexApply" [pageSize]="pageSizeApply" [pageSizeOptions]="pageSizeOptionsApply"
+                  [hidePageSize]="false" aria-label="Chọn trang">
+              </mat-paginator>
+            </div>
             <mat-card class="cardWithShadow">
                 <mat-card-content class="p-24">
                     <div class="table-responsive ">
@@ -90,7 +99,7 @@
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
                         </table>
-                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                        
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -101,7 +110,7 @@
                     <div class="row justify-content-between">
                         <div class="col-lg-12">
                             <mat-form-field appearance="outline" class="w-100 hide-hint">
-                                <input matInput placeholder="Search User" />
+                                <input matInput placeholder="Search User" (keyup)="applyFilterNotApply($any($event.target).value)" />
                                 <mat-icon matSuffix>
                                     <i-tabler name="search" class="icon-20"></i-tabler>
                                 </mat-icon>
@@ -111,6 +120,11 @@
                 </mat-card-content>
             </mat-card>
             <h3 class="text-center">User chưa đăng ký</h3>
+            <div *ngIf="totalRecordNotApply$ | async as length">
+                <mat-paginator (page)="handlePageEventNotApply($event)" [length]="length" [pageIndex]="pageIndexNotApply" [pageSize]="pageSizeNotApply" [pageSizeOptions]="pageSizeOptionsNotApply"
+                  [hidePageSize]="false" aria-label="Chọn trang">
+              </mat-paginator>
+            </div>
             <mat-card class="cardWithShadow">
                 <mat-card-content class="p-24">
                     <div class="table-responsive ">
@@ -174,7 +188,7 @@
                             <tr mat-header-row *matHeaderRowDef="displayedColumnsAdd"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumnsAdd"></tr>
                         </table>
-                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                        
                     </div>
                 </mat-card-content>
             </mat-card>

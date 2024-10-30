@@ -22,6 +22,7 @@ import { Observable, Subscription } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MAT_SNACK_BAR_DATA, MatSnackBar } from '@angular/material/snack-bar';
 import { A } from '@angular/cdk/keycodes';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-course-detail',
@@ -39,7 +40,8 @@ import { A } from '@angular/cdk/keycodes';
     MatInputModule,
     MatButtonModule,
     CommonModule,
-    MatProgressSpinnerModule, MatIconModule
+    MatProgressSpinnerModule, MatIconModule,
+    OverlayModule
   ],
   templateUrl: './course-detail.component.html',
   styleUrl: './course-detail.component.scss'
@@ -189,8 +191,22 @@ export class CourseDetailComponent {
   // tslint:disable-next-line: component-selector
   selector: 'add-dialog-course-detail',
   standalone: true,
-  imports: [MaterialModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [MaterialModule, FormsModule, ReactiveFormsModule, CommonModule, OverlayModule, TablerIconsModule],
   templateUrl: 'add-dialog-course-detail.html',
+  styles: [`
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.5); /* Làm mờ màn hình */
+      z-index: 1000; /* Đảm bảo overlay ở trên cùng */
+    }
+  `],
   providers: [DatePipe],
 })
 // tslint:disable-next-line: component-class-suffix
@@ -337,9 +353,9 @@ export class AppDialogCourseDetailComponent {
 
   converImage(imagePath: any) {
     // console.log('imagePath',imagePath)
-    // const baseUrl = 'http://localhost:3000';
+    const baseUrl = 'http://localhost:3000';
     let cleanedImagePath = null
-    const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
+    // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
     // Loại bỏ 'uploads' khỏi đường dẫn
   if(imagePath.includes('uploads')){
@@ -379,8 +395,22 @@ export class AppDialogCourseDetailComponent {
 @Component({
   selector: 'dialog-overview',
   standalone: true,
-  imports: [MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatButtonModule,MatProgressSpinnerModule, MatIconModule, CommonModule],
+  imports: [MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatButtonModule,MatProgressSpinnerModule, MatIconModule, CommonModule, OverlayModule],
   templateUrl: 'dialog-overview.component.html',
+  styles: [`
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.5); /* Làm mờ màn hình */
+      z-index: 1000; /* Đảm bảo overlay ở trên cùng */
+    }
+  `],
 })
 export class AppDialogOverviewComponent {
   private _snackBar = inject(MatSnackBar)

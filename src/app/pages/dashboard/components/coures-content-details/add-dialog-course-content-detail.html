@@ -1,36 +1,30 @@
 <h2 class="f-w-500 m-b-24" mat-dialog-title><strong>{{action}}</strong></h2>
-<div class="m-t-24 d-flex justify-content-center" *ngIf="loadingSpinner" >
+<div class="m-t-24 d-flex justify-content-center overlay" *ngIf="loadingSpinner" >
   <mat-spinner ></mat-spinner>
 </div>
 
 @if(action !== 'Delete') {
 <mat-dialog-content style="min-width: 800px; ">
   <form #courseForm="ngForm">
-    <!-- <div class="d-flex align-items-center m-b-16" >
-      <img
-        class="mat-card-avatar"
-        [src]="local_data.imagePath"
-        width="200"
-        height="100"
-        
-      />
-      <button mat-flat-button color="primary" class="m-l-16 input-file-button">
-        <input type="file" (change)="selectFile($event)" #fileInput />
-      </button>
-    </div> -->
 
     <div class="row">
       <div class="col-lg-12">
-        
+        <mat-label class="mat-subtitle-2 f-w-600 m-b-8 d-block"
+            >Value:</mat-label
+          >        
         <mat-form-field appearance="outline" class="w-100 m-t-8" color="primary">
           <textarea matInput [(ngModel)]="local_data.value" name="value" placeholder="Value" rows="3"></textarea>
+          <mat-icon matPrefix>
+            <i-tabler name="align-box-left-middle" class="icon-20 d-flex"></i-tabler>
+          </mat-icon>
         </mat-form-field>
+        
       </div>   
       
     </div>
     <div class="row">
       <div class="col-lg-6 ">
-        <label class="m-b-8">Type:</label>
+        <label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Type:</label>
         <mat-form-field appearance="outline" class="w-100 m-t-8">          
           <mat-select [(ngModel)]="local_data.type_id" name="type_id">
             <mat-option [value]="1">Title</mat-option>
@@ -39,16 +33,22 @@
             <mat-option [value]="4">Image</mat-option>
             <mat-option [value]="5">Video</mat-option>
           </mat-select>
+          <mat-icon matPrefix>
+            <i-tabler name="arrows-random" class="icon-20 d-flex"></i-tabler>
+          </mat-icon>
         </mat-form-field>
       </div>
       
       <div class="col-lg-6 " >
-        <label class="m-b-8">Bold:</label>
+        <label class="mat-subtitle-2 f-w-600 m-b-8 d-block">Bold:</label>
         <mat-form-field appearance="outline" class="w-100 m-t-8">
           <mat-select [(ngModel)]="local_data.bold" name="bold">
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>
+          <mat-icon matPrefix>
+            <i-tabler name="circle-letter-b" class="icon-20 d-flex"></i-tabler>
+          </mat-icon>
         </mat-form-field>
       </div>
     </div>

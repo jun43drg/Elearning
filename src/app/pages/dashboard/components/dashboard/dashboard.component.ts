@@ -1,4 +1,4 @@
-import { Component, inject, Inject, Optional } from '@angular/core';
+import { Component, inject, Inject, Optional, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -19,6 +19,9 @@ import {MatIconModule} from '@angular/material/icon';
 import { MAT_SNACK_BAR_DATA, MatSnackBar } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ApplyUserComponent } from '../apply-user/apply-user.component';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 // import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -36,7 +39,10 @@ import { ApplyUserComponent } from '../apply-user/apply-user.component';
     MatProgressSpinnerModule, 
     MatIconModule,
     MatSlideToggleModule,
-    FormsModule,    
+    FormsModule,   
+    OverlayModule,
+    MatPaginatorModule,
+    DatePipe
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -49,6 +55,14 @@ export class DashboardComponent {
   private subscription!: Subscription;
   protected sourceList$!: Observable<any | null>;
   public loadingSpinner = false;
+  dataSource = new MatTableDataSource<any>();
+  protected pageSizeOptions: any[] = [];
+  protected totalRecord$!: Observable<number | null>;
+  protected pageIndex!: number;
+  protected pageSize!: number;
+  protected filter: any = {}
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator =
+  Object.create(null);
 
   toggleReply() {
     this.istoggleReply = !this.istoggleReply;
@@ -61,10 +75,18 @@ export class DashboardComponent {
     public dashboardService: dashboardService,
     public dialog: MatDialog,
     
-    // public datePipe: DatePipe
+    // private datePipe: DatePipe
   ) {
     
   }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    console.log('this.dataSource', this.dataSource)
+    
+  }
+
+ 
 
   openDialogRemove(
     enterAnimationDuration: string,
@@ -89,9 +111,9 @@ export class DashboardComponent {
 
   converImage(imagePath: any) {
     // console.log('imagePath',imagePath)
-    // const baseUrl = 'http://localhost:3000';
+    const baseUrl = 'http://localhost:3000';
     let cleanedImagePath = null
-    const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
+    // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
     // Loại bỏ 'uploads' khỏi đường dẫn
   if(imagePath.includes('uploads')){   
@@ -103,10 +125,22 @@ export class DashboardComponent {
   return cleanedImagePath
   }
 
+  
+
   ngOnInit(): void {
     console.log('isButtonPermission', this.isButtonPermission());
+    console.log('paginator', this.paginator)
     
     this.loadingSpinner = true;
+    this.pageSizeOptions = [5, 10, 20, 50, 100, 200]
+    this.pageIndex = 0
+    this.pageSize = 5
+    this.filter = {
+      page: this.pageIndex + 1,
+      size: this.pageSize,
+      search: ''
+    }
+    this.totalRecord$ = this.dashboardService.totalRecord$;
     if (this.dashboardService.blogPosts.length === 0) {
       this.dashboardService
         .getBlog()
@@ -114,7 +148,7 @@ export class DashboardComponent {
     }
 
     this.sourceList$ = this.dashboardService.sourceList$; 
-    this.subscription = this.dashboardService.getAllCourse().subscribe(
+    this.subscription = this.dashboardService.getAllCourse(this.filter).subscribe(
       (res: any) => {
         if(res){
           this.loadingSpinner = false;
@@ -128,13 +162,46 @@ export class DashboardComponent {
     const role = JSON.parse(localStorage.getItem('role') || '[]');
     return ['Admin', 'Teacher'].some(r => role.includes(r));
   }
-  applyFilter(filterValue: string): void {}
+  applyFilter(filterValue: string): void {
+    this.filter.search = filterValue
+    this.subscription = this.dashboardService.getAllCourse(this.filter).subscribe(
+      (res: any) => {
+        if(res){         
+        }
+      }
+    )
+    console.log('this.filter', this.filter)
+  }
 
   ngOnDestroy(): void {   
     if (this.subscription) {      
       this.subscription.unsubscribe();
     }
   } 
+
+  handlePageEvent(e: PageEvent) {
+
+    console.log('e', e)
+    this.loadingSpinner = true;
+    this.pageIndex = e.pageIndex
+    this.pageSize = e.pageSize
+    this.filter = {
+      page: this.pageIndex + 1,
+      size: this.pageSize,
+      search: ''
+    }
+    this.subscription = this.dashboardService.getAllCourse(this.filter).subscribe(
+      (res: any) => {
+        if(res){
+          this.loadingSpinner = false;
+        }
+      }
+    )
+    //set thong tin paging xuong share data.... hệ thống sẽ tự reload list
+    // this.userService.setItemsPerPage(e.pageSize);
+    // this.userService.setCurrentPage(e.pageIndex);
+    // this.userService.pushState();
+  }
 
   openDialog(action: string, obj: any): void {
     obj.action = action;
@@ -159,6 +226,8 @@ export class DashboardComponent {
   }
 }
 
+
+
 @Component({
   // tslint:disable-next-line: component-selector
   selector: 'app-dialog-coures',
@@ -170,8 +239,24 @@ export class DashboardComponent {
     CommonModule, 
     MatDividerModule, 
     MatIconModule,
-    TablerIconsModule],
+    TablerIconsModule,
+    OverlayModule
+  ],
   templateUrl: 'add-dialog-course.html',
+  styles: [`
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.5); /* Làm mờ màn hình */
+      z-index: 1000; /* Đảm bảo overlay ở trên cùng */
+    }
+  `],
   providers: [DatePipe],
 })
 // tslint:disable-next-line: component-class-suffix
@@ -325,9 +410,9 @@ export class AppDialogCourseComponent {
 
   converImage(imagePath: any) {
     // console.log('imagePath',imagePath)
-    // const baseUrl = 'http://localhost:3000';
+    const baseUrl = 'http://localhost:3000';
     let cleanedImagePath = null
-    const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
+    // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
     // Loại bỏ 'uploads' khỏi đường dẫn
   if(imagePath.includes('uploads')){
@@ -380,9 +465,24 @@ export class AppDialogCourseComponent {
     MatProgressSpinnerModule, 
     MatIconModule, 
     CommonModule, 
-    MatDividerModule
+    MatDividerModule,
+    OverlayModule
   ],
   templateUrl: 'dialog-overview.component.html',
+  styles: [`
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.5); /* Làm mờ màn hình */
+      z-index: 1000; /* Đảm bảo overlay ở trên cùng */
+    }
+  `]
 })
 export class AppDialogOverviewComponent {
   private _snackBar = inject(MatSnackBar)
@@ -463,4 +563,6 @@ export class AppDialogOverviewComponent {
 export class SnackbarComponent {
   constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) {}
 }
+
+
 

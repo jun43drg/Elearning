@@ -11,6 +11,11 @@ export const routes: Routes = [
     component: FullComponent,
     children: [
       {
+        path: 'user',
+        loadChildren: () =>
+          import('./pages/user/user.routes').then((m) => m.User),
+      },
+      {
         path: 'home',
         loadChildren: () =>
           import('./pages/home/home.routes').then((m) => m.Home),

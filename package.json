@@ -2,7 +2,7 @@
   "name": "modernize",
   "version": "2.0.0",
   "scripts": {
-    "init": "ng g c pages/dashboard/components/apply-user",
+    "init": "ng g c pages/user/components/list",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

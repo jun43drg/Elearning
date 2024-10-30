@@ -113,9 +113,9 @@ export class AppDashboard1Component {
 
   converImage(imagePath: any) {
     // console.log('imagePath',imagePath)
-    // const baseUrl = 'http://localhost:3000';
+    const baseUrl = 'http://localhost:3000';
     let cleanedImagePath = null
-    const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
+    // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
     // Loại bỏ 'uploads' khỏi đường dẫn
   if(imagePath.includes('uploads')){
@@ -134,7 +134,7 @@ export class AppDashboard1Component {
 
   customOptions: OwlOptions = {
     items: 4,
-    loop: true,
+    loop: false,
     margin: 10,
     autoplay: false,
     autoplayTimeout: 3000,
