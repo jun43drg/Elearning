@@ -50,7 +50,7 @@ export class AppHorizontalHeaderComponent {
   @Output() toggleMobileNav = new EventEmitter<void>();
   @Output() toggleMobileFilterNav = new EventEmitter<void>();
   @Output() toggleCollapsed = new EventEmitter<void>();
-
+  
   showFiller = false;
 
   public selectedLanguage: any = {

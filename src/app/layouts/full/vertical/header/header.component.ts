@@ -65,6 +65,9 @@ export class HeaderComponent {
   @Output() toggleMobileFilterNav = new EventEmitter<void>();
   @Output() toggleCollapsed = new EventEmitter<void>();
 
+  public user_info:any = JSON.parse(localStorage.getItem('user_info') || '{}');
+  public role:any = JSON.parse(localStorage.getItem('role') || '{}');
+  
   showFiller = false;
 
   public selectedLanguage: any = {
@@ -73,6 +76,10 @@ export class HeaderComponent {
     type: 'US',
     icon: '/assets/images/flag/icon-flag-en.svg',
   };
+
+  ngOnInit(): void {
+    console.log('this.user_info',JSON.parse(this.user_info));
+  }
 
   public languages: any[] = [
     {
