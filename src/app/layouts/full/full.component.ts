@@ -77,6 +77,9 @@ export class FullComponent implements OnInit {
   private isCollapsedWidthFixed = false;
   private htmlElement!: HTMLHtmlElement;
 
+  public user_info:any = JSON.parse(localStorage.getItem('user_info') || '{}');
+  public role:any = JSON.parse(localStorage.getItem('role') || '{}');
+
   get isOver(): boolean {
     return this.isMobileScreen;
   }

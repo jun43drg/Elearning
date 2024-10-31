@@ -58,6 +58,7 @@ export class AppSideLoginComponent {
             response.role.map((item:any) => role.push(item.name_role));            
             localStorage.setItem('tokens', response.accessToken);
             localStorage.setItem('role', JSON.stringify(role));
+            localStorage.setItem('user_info', JSON.stringify(response.user_info));
             this.openSnackBar('Login successful', 'success');
             this.router.navigate(['/home']);
           }, 2000);
