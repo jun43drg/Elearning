@@ -14,8 +14,19 @@
             </mat-icon>
           </mat-form-field>
         </div>
-        <div class="col-lg-4 d-flex align-items-center justify-content-end">
+        <div class="col-lg-4 d-flex gap-16 align-items-center justify-content-end">
+          <button mat-flat-button style="background-color: #13deb9; color: white;" (click)="exportData()">
+            <mat-icon>file_present</mat-icon>
+            Export to Excel
+          </button>
+          
+          
+          <!-- <button mat-flat-button >            
+            Export to Excel
+            <i-tabler name="file-spreadsheet" class="icon-20"></i-tabler>
+          </button> -->
           <button mat-flat-button (click)="openDialog('Add', {})" color="primary">
+            <mat-icon>add</mat-icon>
             Add User
           </button>
         </div>
@@ -23,6 +34,7 @@
     </mat-card-content>
   </mat-card>
   <div *ngIf="totalRecord$ | async as length">
+    
     <mat-paginator (page)="handlePageEvent($event)" [length]="length" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
       [hidePageSize]="false" aria-label="Chọn trang">
   </mat-paginator>

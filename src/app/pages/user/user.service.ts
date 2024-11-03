@@ -3,6 +3,9 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, catchError, debounceTime, delay, Observable, tap, throwError } from "rxjs";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Router } from "@angular/router";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
 
 
 
@@ -10,8 +13,9 @@ import { Router } from "@angular/router";
     providedIn: 'root'
 })
 export class UserService {
-  private url = 'https://elearning-be-h3lj.onrender.com'
+  // private url = 'https://elearning-be-h3lj.onrender.com'
   // private url = 'http://localhost:3000';
+  private url = 'http://103.82.38.96:3000'
 
   private userListDisplay =
   new BehaviorSubject<any | null>(null);
@@ -25,6 +29,28 @@ constructor(public httpClient: HttpClient,
             private router: Router,
             
           ) {
+}
+
+exportAsExcelFile(data: any[], fileName: string): void {
+  const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+  // Thiết lập tiêu đề đậm (bold) cho dòng đầu tiên
+  const range = XLSX.utils.decode_range(worksheet['!ref'] || ''); // Lấy phạm vi của worksheet
+  for (let col = range.s.c; col <= range.e.c; col++) {
+    const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col }); // Địa chỉ ô trong dòng đầu tiên
+    if (!worksheet[cellAddress]) continue; // Nếu ô trống, bỏ qua
+
+    worksheet[cellAddress].s = { font: { bold: true } }; // Thiết lập font đậm cho ô
+  }
+
+  const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+  const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  this.saveAsExcelFile(excelBuffer, fileName);
+}
+
+private saveAsExcelFile(buffer: any, fileName: string): void {
+  const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+  saveAs(data, `${fileName}_${new Date().getTime()}.xlsx`);
 }
 
 

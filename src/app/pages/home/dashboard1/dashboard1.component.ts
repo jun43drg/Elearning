@@ -114,8 +114,9 @@ export class AppDashboard1Component {
   converImage(imagePath: any) {
     // console.log('imagePath',imagePath)
     // const baseUrl = 'http://localhost:3000';
+    const baseUrl = 'http://103.82.38.96:3000'
     let cleanedImagePath = null
-    const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
+    // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
     // Loại bỏ 'uploads' khỏi đường dẫn
   if(imagePath.includes('uploads')){

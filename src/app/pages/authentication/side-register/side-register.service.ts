@@ -8,7 +8,7 @@ import { CourseListModel } from '../../dashboard/model/course-list.model';
 @Injectable({
   providedIn: 'root'
 })
-export class SideLoginService {
+export class SideRegisterService {
   // private url = 'https://elearning-be-h3lj.onrender.com';
   // private url = 'http://localhost:3000';
   private url = 'http://103.82.38.96:3000'
@@ -17,12 +17,9 @@ export class SideLoginService {
   constructor(public httpClient: HttpClient) {
   }
 
-  public getLogin(data:any){
-    const body = {
-      email: data.uname,
-      password: data.password
-    };
-    const response = this.httpClient.post<any>(`${this.url}/auth/login`,body);
+  public getRegister(data:any){
+    
+    const response = this.httpClient.post<any>(`${this.url}/auth/singup`,data);
 
     return response
     

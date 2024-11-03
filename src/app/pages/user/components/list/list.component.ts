@@ -90,6 +90,8 @@ export class ListComponent implements AfterViewInit {
   protected pageSize!: number;
   protected filter: any = {}
   public loadingSpinner = false;
+
+  
   
 
  
@@ -100,6 +102,15 @@ export class ListComponent implements AfterViewInit {
   
 
   constructor(public dialog: MatDialog, public datePipe: DatePipe, private userService: UserService) {}
+
+  exportData(): void {
+    this.userList$.subscribe((res: any) => {
+      if(res){
+        
+        this.userService.exportAsExcelFile(res, 'List_User');
+      }
+    }).unsubscribe()
+  }
 
   ngOnInit(): void {
     this.loadingSpinner = true;
@@ -387,8 +398,9 @@ export class AppDialogUserComponent {
   converImage(imagePath: any) {
     // console.log('imagePath',imagePath)
     // const baseUrl = 'http://localhost:3000';
+    const baseUrl = 'http://103.82.38.96:3000'
     let cleanedImagePath = null
-    const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
+    // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
     // Loại bỏ 'uploads' khỏi đường dẫn
   if(imagePath.includes('uploads')){

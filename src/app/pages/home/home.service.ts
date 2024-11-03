@@ -9,8 +9,9 @@ import { Router } from "@angular/router";
     providedIn: 'root'
 })
 export class HomeService {
-  private url = 'https://elearning-be-h3lj.onrender.com'
+  // private url = 'https://elearning-be-h3lj.onrender.com'
   // private url = 'http://localhost:3000';
+  private url = 'http://103.82.38.96:3000'
 
 constructor(public httpClient: HttpClient, private router: Router) {
 }

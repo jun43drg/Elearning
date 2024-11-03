@@ -1,3 +1,6 @@
+<div class="m-t-24 d-flex justify-content-center overlay" *ngIf="loadingSpinner" >
+  <mat-spinner ></mat-spinner>
+</div>
 <div class="blank-layout-container justify-content-center">
   <div class="position-relative row w-100 h-100">
     <div class="col-lg-7 col-xl-8 bg-gredient p-0">
@@ -85,12 +88,12 @@
                 class="w-100"
                 color="primary"
               >
-                <input matInput formControlName="uname" />
-                @if(f['uname'].touched && f['uname'].invalid) {
+                <input matInput formControlName="name_user" />
+                @if(f['name_user'].touched && f['name_user'].invalid) {
                 <mat-hint class="m-b-16 error-msg">
-                  @if(f['uname'].errors && f['uname'].errors['required']) {
+                  @if(f['name_user'].errors && f['name_user'].errors['required']) {
                   <div class="text-error">Name is required.</div>
-                  } @if(f['uname'].errors && f['uname'].errors['minlength']) {
+                  } @if(f['name_user'].errors && f['name_user'].errors['minlength']) {
                   <div class="text-error">Name should be 6 character.</div>
                   }
                 </mat-hint>
@@ -134,10 +137,15 @@
                 }
               </mat-form-field>
 
+              <mat-radio-group formControlName="role_id"  aria-label="Select an option">
+                <mat-radio-button value="3">Student</mat-radio-button>
+                <mat-radio-button value="2">Teacher</mat-radio-button>
+              </mat-radio-group>
+
               <button
                 mat-flat-button
                 color="primary"
-                class="w-100"
+                class="w-100 m-t-24"
                 [disabled]="!form.valid"
               >
                 Sign Up
