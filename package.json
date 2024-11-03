@@ -4,7 +4,7 @@
   "scripts": {
     "init": "ng g c pages/user/components/list",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -44,7 +44,7 @@
     "xlsx": "^0.18.5",
     "xlsx-style": "^0.8.13",
     "zone.js": "~0.14.2"
-    
+
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.0.4",
