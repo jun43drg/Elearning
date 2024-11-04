@@ -22,6 +22,7 @@ import { ApplyUserComponent } from '../apply-user/apply-user.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { environment } from 'src/app/config/environments/environment';
 // import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -110,9 +111,8 @@ export class DashboardComponent {
   }
 
   converImage(imagePath: any) {
-    // console.log('imagePath',imagePath)
-    // const baseUrl = 'http://localhost:3000';
-    const baseUrl = 'http://103.82.38.96:3000'
+
+    const baseUrl = environment.domain
     let cleanedImagePath = null
     // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn
@@ -409,10 +409,8 @@ export class AppDialogCourseComponent {
     this.dialogRef.close({ event: 'Cancel' });
   }
 
-  converImage(imagePath: any) {
-    // console.log('imagePath',imagePath)
-    // const baseUrl = 'http://localhost:3000';
-    const baseUrl = 'http://103.82.38.96:3000'
+  converImage(imagePath: any) { 
+    const baseUrl = environment.domain
     let cleanedImagePath = null
     // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn

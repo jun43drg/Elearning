@@ -2,17 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { CourseListModel } from '../../dashboard/model/course-list.model';
+import { environment } from 'src/app/config/environments/environment';
+
 
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class SideLoginService {
-  // private url = 'https://elearning-be-h3lj.onrender.com';
-  // private url = 'http://localhost:3000';
-  private url = 'http://103.82.38.96:3000'
-  
+export class SideLoginService { 
  
   constructor(public httpClient: HttpClient) {
   }
@@ -22,7 +20,7 @@ export class SideLoginService {
       email: data.uname,
       password: data.password
     };
-    const response = this.httpClient.post<any>(`${this.url}/auth/login`,body);
+    const response = this.httpClient.post<any>(`${environment.domain}/auth/login`,body);
 
     return response
     

@@ -5,6 +5,7 @@ import { dashboardData } from './dashboardData';
 import { courseList } from './course-data';
 import { CourseListModel } from './model/course-list.model';
 import { Router } from '@angular/router';
+import { environment } from 'src/app/config/environments/environment';
 
 
 @Injectable({
@@ -15,9 +16,8 @@ export class dashboardService {
   blogPosts: any[] = [];
   
   detailId: string = '';
-  // private url = 'https://elearning-be-h3lj.onrender.com'
-  // private url = 'http://localhost:3000';
-  private url = 'http://103.82.38.96:3000'
+
+  private url = environment.domain
  
 
  
