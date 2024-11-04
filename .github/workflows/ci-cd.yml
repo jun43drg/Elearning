@@ -42,6 +42,6 @@ jobs:
         password: 6V5oAhG3Y5xj3068  # Hoặc sử dụng private key
         script: |
           docker pull haupham2311/elearning-fe-d:latest
-          docker stop elearning-fe-d || true
-          docker rm elearning-fe-d || true
-          docker run -d --name elearning-fe-d -p 4200:80 haupham2311/elearning-fe-d:latest
+          docker stop angular-app || true
+          docker rm angular-app || true
+          docker run -d --name angular-app -p 4200:80 haupham2311/elearning-fe-d:latest
