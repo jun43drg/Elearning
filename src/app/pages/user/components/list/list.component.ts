@@ -47,6 +47,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { MAT_SNACK_BAR_DATA, MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { environment } from 'src/app/config/environments/environment';
 
 
 
@@ -396,9 +397,7 @@ export class AppDialogUserComponent {
   }
 
   converImage(imagePath: any) {
-    // console.log('imagePath',imagePath)
-    // const baseUrl = 'http://localhost:3000';
-    const baseUrl = 'http://103.82.38.96:3000'
+    const baseUrl = environment.domain
     let cleanedImagePath = null
     // const baseUrl = 'https://elearning-be-h3lj.onrender.com'; 
     // URL cơ sở của bạn

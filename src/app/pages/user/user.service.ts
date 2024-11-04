@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Router } from "@angular/router";
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { environment } from "src/app/config/environments/environment";
 
 
 
@@ -13,10 +14,7 @@ import { saveAs } from 'file-saver';
     providedIn: 'root'
 })
 export class UserService {
-  // private url = 'https://elearning-be-h3lj.onrender.com'
-  // private url = 'http://localhost:3000';
-  private url = 'http://103.82.38.96:3000'
-
+  private url = environment.domain
   private userListDisplay =
   new BehaviorSubject<any | null>(null);
   public userList$: Observable<any | null> =
