@@ -39,7 +39,7 @@ jobs:
       with:
         host: 103.82.38.96
         username: root
-        password: 6V5oAhG3Y5xj3068  # Hoặc sử dụng private key
+        password: v8B7oM21hptdTJQY  # Hoặc sử dụng private key
         script: |
           docker pull haupham2311/elearning-fe-d:latest
           docker stop your_container_name || true
